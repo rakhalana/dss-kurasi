@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+// Model jembatan (pivot dengan data tambahan) antara tabel PeriodeKurasi dan Alternatif (Produk)
 class PeriodeAlternatif extends Model
 {
     protected $table = 'periode_alternatif';
@@ -22,19 +23,21 @@ class PeriodeAlternatif extends Model
         'status_lolos_legalitas' => 'boolean',
     ];
 
-    /**
-     * Get the periode_kurasi that owns the periode_alternatif.
-     */
+    // Relasi balik ke model periode kurasi induk
     public function periodeKurasi(): BelongsTo
     {
         return $this->belongsTo(PeriodeKurasi::class, 'id_periode_kurasi', 'id_periode_kurasi');
     }
 
-    /**
-     * Get the alternatif that owns the periode_alternatif.
-     */
+    // Relasi ke model data produk alternatif terkait
     public function alternatif(): BelongsTo
     {
         return $this->belongsTo(Alternatif::class, 'id_alternatif', 'id_alternatif');
+    }
+
+    // Relasi satu-ke-banyak ke daftar nilai kriteria produk dalam periode ini
+    public function penilaian()
+    {
+        return $this->hasMany(PenilaianKurasi::class, 'id_periode_alternatif', 'id_periode_alternatif');
     }
 }

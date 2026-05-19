@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+// Model representasi data produk alternatif (UMKM) yang dikurasi
 class Alternatif extends Model
 {
     protected $table = 'alternatif';
     protected $primaryKey = 'id_alternatif';
     
-    // Database handles updated_at via useCurrentOnUpdate, but Laravel expects timestamps by default.
-    // Let's keep timestamps enabled but match the migration's behavior if needed.
+    // Sinkronisasi timestamps default Laravel dengan database
     public $timestamps = true;
 
     protected $fillable = [
@@ -24,9 +24,7 @@ class Alternatif extends Model
         'updated_at'
     ];
 
-    /**
-     * Get the legalitas associated with the alternatif.
-     */
+    // Relasi satu-ke-satu ke dokumen data legalitas produk
     public function legalitas()
     {
         return $this->hasOne(AlternatifLegalitas::class, 'id_alternatif', 'id_alternatif');

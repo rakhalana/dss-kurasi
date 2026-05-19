@@ -3,9 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
+// Migrasi untuk menyisipkan data default awal (seeding) kriteria penilaian
 return new class extends Migration {
     public function up(): void
     {
+        // Data default kriteria awal (C1 sampai C9)
         $kriteria = [
             [
                 'id_kriteria' => 1,
@@ -90,11 +92,13 @@ return new class extends Migration {
             ],
         ];
 
+        // Menyisipkan data ke database
         DB::table('kriteria')->insert($kriteria);
     }
 
     public function down(): void
     {
+        // Mengosongkan kembali tabel kriteria dengan mengabaikan integrity constraints sementara
         \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         DB::table('kriteria')->truncate();
         \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();

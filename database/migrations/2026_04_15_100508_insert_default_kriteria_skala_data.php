@@ -5,12 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
+// Migrasi untuk menyisipkan data default awal (seeding) sub-kriteria/skala kriteria
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
+        // Menyusun daftar opsi skala nilai default (skala 1 sampai 5) untuk C1 sampai C9
         $skala = [
             // Kriteria 1: Rasa
             ['id_kriteria' => 1, 'nilai_skala' => 1, 'deskripsi_skala' => 'Deskripsi skala 1 untuk kriteria Rasa', 'is_aktif' => true],
@@ -76,14 +75,13 @@ return new class extends Migration {
             ['id_kriteria' => 9, 'nilai_skala' => 5, 'deskripsi_skala' => 'Deskripsi skala 5 untuk kriteria Informasi label', 'is_aktif' => true],
         ];
 
+        // Menyisipkan data skala ke dalam tabel
         DB::table('kriteria_skala')->insert($skala);
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        // Mengosongkan isi tabel kriteria_skala dengan mengabaikan foreign key constraints sementara
         \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         DB::table('kriteria_skala')->truncate();
         \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();

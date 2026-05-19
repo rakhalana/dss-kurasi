@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+// Model representasi data status dokumen legalitas produk alternatif (NIB, BPOM, PIRT, Halal)
 class AlternatifLegalitas extends Model
 {
     protected $table = 'alternatif_legalitas';
     protected $primaryKey = 'id_legalitas';
-    public $timestamps = false; // updated_at is handled by DB
+    
+    // Penanganan updated_at secara otomatis dikelola langsung oleh sistem database
+    public $timestamps = false;
 
     protected $fillable = [
         'id_alternatif',
@@ -25,9 +28,7 @@ class AlternatifLegalitas extends Model
         'updated_at'
     ];
 
-    /**
-     * Get the alternatif that owns the legalitas.
-     */
+    // Relasi balik ke produk alternatif pemilik berkas legalitas
     public function alternatif()
     {
         return $this->belongsTo(Alternatif::class, 'id_alternatif', 'id_alternatif');

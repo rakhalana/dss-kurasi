@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+// Model representasi periode penyelenggaraan kurasi produk alternatif
 class PeriodeKurasi extends Model
 {
     protected $table = 'periode_kurasi';
@@ -28,33 +29,25 @@ class PeriodeKurasi extends Model
         'tanggal_kurasi' => 'date',
     ];
 
-    /**
-     * Get the kurator associated with the periode.
-     */
+    // Relasi ke pengguna sistem yang ditugaskan sebagai kurator periode ini
     public function kurator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_kurator', 'id');
     }
 
-    /**
-     * Get the ahp_sesi associated with the periode.
-     */
+    // Relasi ke data sesi pembobotan kriteria AHP yang digunakan dalam periode
     public function ahpSesi(): BelongsTo
     {
         return $this->belongsTo(AhpSesi::class, 'id_ahp_sesi', 'id_ahp_sesi');
     }
 
-    /**
-     * Get the produk terbaik associated with the periode.
-     */
+    // Relasi ke produk alternatif terbaik hasil perhitungan keputusan periode ini
     public function produkTerbaik(): BelongsTo
     {
         return $this->belongsTo(Alternatif::class, 'produk_terbaik_id', 'id_alternatif');
     }
 
-    /**
-     * Get the periode_alternatif associated with the periode.
-     */
+    // Relasi satu-ke-banyak ke daftar produk alternatif yang terdaftar di periode ini
     public function periodeAlternatif(): HasMany
     {
         return $this->hasMany(PeriodeAlternatif::class, 'id_periode_kurasi', 'id_periode_kurasi');

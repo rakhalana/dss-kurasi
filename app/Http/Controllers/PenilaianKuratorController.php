@@ -22,28 +22,22 @@ class PenilaianKuratorController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $totalKriteria = Kriteria::count();
+
         foreach ($periodes as $periode) {
             $totalProdukLolos = PeriodeAlternatif::where('id_periode_kurasi', $periode->id_periode_kurasi)
                 ->where('status_lolos_legalitas', true)
                 ->count();
                 
-            $totalKriteria = Kriteria::count();
             $produkDinilai = 0;
             
             if ($totalProdukLolos > 0 && $totalKriteria > 0) {
-                $periodeAlternatifs = PeriodeAlternatif::where('id_periode_kurasi', $periode->id_periode_kurasi)
+                $produkDinilai = PeriodeAlternatif::where('id_periode_kurasi', $periode->id_periode_kurasi)
                     ->where('status_lolos_legalitas', true)
-                    ->get();
-                    
-                foreach ($periodeAlternatifs as $pa) {
-                    $nilaiCount = PenilaianKurasi::where('id_periode_alternatif', $pa->id_periode_alternatif)
-                        ->where('dinilai_oleh', $userId)
-                        ->count();
-                        
-                    if ($nilaiCount >= $totalKriteria) {
-                        $produkDinilai++;
-                    }
-                }
+                    ->whereHas('penilaian', function ($query) use ($userId) {
+                        $query->where('dinilai_oleh', $userId);
+                    }, '>=', $totalKriteria)
+                    ->count();
             }
             
             $periode->total_produk_lolos = $totalProdukLolos;
@@ -67,16 +61,15 @@ class PenilaianKuratorController extends Controller
         $totalKriteria = Kriteria::count();
 
         $produkList = PeriodeAlternatif::with('alternatif')
+            ->withCount(['penilaian as nilai_count' => function ($query) use ($userId) {
+                $query->where('dinilai_oleh', $userId);
+            }])
             ->where('id_periode_kurasi', $id_periode)
             ->orderBy('urutan_input', 'asc')
             ->get();
             
         foreach ($produkList as $produk) {
-            $nilaiCount = PenilaianKurasi::where('id_periode_alternatif', $produk->id_periode_alternatif)
-                ->where('dinilai_oleh', $userId)
-                ->count();
-            
-            $produk->is_dinilai = ($totalKriteria > 0 && $nilaiCount >= $totalKriteria);
+            $produk->is_dinilai = ($totalKriteria > 0 && $produk->nilai_count >= $totalKriteria);
         }
 
         return view('kurator.penilaian.detail', compact('periode', 'produkList'));
@@ -100,7 +93,12 @@ class PenilaianKuratorController extends Controller
             ]);
         }
 
+        $totalKriteria = Kriteria::count();
+
         $antreanProduk = PeriodeAlternatif::with('alternatif')
+            ->withCount(['penilaian as nilai_count' => function ($query) use ($userId) {
+                $query->where('dinilai_oleh', $userId);
+            }])
             ->where('id_periode_kurasi', $id_periode)
             ->where('status_lolos_legalitas', true)
             ->orderBy('urutan_input', 'asc')
@@ -111,13 +109,8 @@ class PenilaianKuratorController extends Controller
                 ->with('error', 'Belum ada produk yang lolos legalitas untuk dinilai pada periode ini.');
         }
 
-        $totalKriteria = Kriteria::count();
-
         foreach ($antreanProduk as $p) {
-            $nilaiCount = PenilaianKurasi::where('id_periode_alternatif', $p->id_periode_alternatif)
-                ->where('dinilai_oleh', $userId)
-                ->count();
-            $p->is_dinilai = ($totalKriteria > 0 && $nilaiCount >= $totalKriteria);
+            $p->is_dinilai = ($totalKriteria > 0 && $p->nilai_count >= $totalKriteria);
         }
 
         // Menentukan produk aktif yang sedang atau akan dinilai oleh kurator

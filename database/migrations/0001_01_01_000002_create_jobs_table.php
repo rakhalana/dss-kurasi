@@ -4,13 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+// Migrasi untuk membuat tabel antrean pekerjaan (jobs, job_batches, failed_jobs)
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
+        // Membuat tabel antrean pekerjaan (queue jobs)
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
             $table->string('queue')->index();
@@ -21,6 +20,7 @@ return new class extends Migration
             $table->unsignedInteger('created_at');
         });
 
+        // Membuat tabel kelompok pekerjaan (job batches)
         Schema::create('job_batches', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');
@@ -34,6 +34,7 @@ return new class extends Migration
             $table->integer('finished_at')->nullable();
         });
 
+        // Membuat tabel penyimpanan riwayat pekerjaan yang gagal dijalankan
         Schema::create('failed_jobs', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
@@ -45,11 +46,9 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        // Menghapus tabel antrean jika migrasi dibatalkan
         Schema::dropIfExists('jobs');
         Schema::dropIfExists('job_batches');
         Schema::dropIfExists('failed_jobs');
