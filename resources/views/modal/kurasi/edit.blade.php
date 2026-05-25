@@ -32,14 +32,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label class="font-weight-bold text-dark small">Status Kurasi</label>
-                        <select name="status_kurasi" class="form-control rounded-lg bg-light border-0" required>
-                            <option value="belum" {{ $p->status_kurasi == 'belum' ? 'selected' : '' }}>Belum Mulai</option>
-                            <option value="berlangsung" {{ $p->status_kurasi == 'berlangsung' ? 'selected' : '' }}>Berlangsung</option>
-                            <option value="selesai" {{ $p->status_kurasi == 'selesai' ? 'selected' : '' }}>Selesai</option>
-                        </select>
-                    </div>
+
                     <div class="form-group mb-0">
                         <label class="font-weight-bold text-dark small">Catatan Umum</label>
                         <textarea name="catatan_umum" rows="2" class="form-control rounded-lg bg-light border-0">{{ $p->catatan_umum }}</textarea>

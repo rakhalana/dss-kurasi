@@ -64,7 +64,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($produkList as $index => $item)
+                                        @forelse ($produkList as $index => $item)
                                             @php
                                                 $isEligible = $item->status_lolos_legalitas;
                                                 $rowStyle = !$isEligible ? 'opacity: 0.6; background-color: #f8f9fa;' : '';
@@ -106,7 +106,16 @@
                                                     @endif
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center py-5 text-muted">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <i data-lucide="package" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
+                                                        <p class="mb-0">Belum ada data produk di periode ini.</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -129,7 +138,7 @@
                 "search": "Cari produk:",
                 "lengthMenu": "Tampilkan _MENU_ data",
                 "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                "emptyTable": "Belum ada data produk.",
+                "emptyTable": "Belum ada data produk di periode ini.",
                 "paginate": {
                     "previous": "<i data-lucide='chevron-left'></i>",
                     "next": "<i data-lucide='chevron-right'></i>"

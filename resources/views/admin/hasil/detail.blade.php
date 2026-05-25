@@ -52,7 +52,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($results as $index => $res)
+                                            @forelse($results as $index => $res)
                                                 <tr class="{{ $index < 3 ? 'bg-rank-' . ($index + 1) : '' }}">
                                                     <td class="pl-4 py-3 text-center">
                                                         @if($index == 0)
@@ -88,15 +88,15 @@
                                                     <td class="py-3 text-center">
                                                         @if($res->status_lolos === 'lolos')
                                                             <span class="badge badge-pill badge-success px-3 py-2">
-                                                                <i data-lucide="check-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Lolos
+                                                                <i data-lucide="check-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Layak Retail
                                                             </span>
                                                         @elseif($res->status_lolos === 'lolos_bersyarat')
                                                             <span class="badge badge-pill badge-warning px-3 py-2">
-                                                                <i data-lucide="alert-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Lolos Bersyarat
+                                                                <i data-lucide="alert-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Layak Retail Bersyarat
                                                             </span>
                                                         @else
                                                             <span class="badge badge-pill badge-danger px-3 py-2">
-                                                                <i data-lucide="x-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Tidak Lolos
+                                                                <i data-lucide="x-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Belum Layak
                                                             </span>
                                                         @endif
                                                     </td>
@@ -155,10 +155,17 @@
                                                                                         @endforeach
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="saran-box p-2 bg-white rounded border border-warning">
-                                                                                    <div class="small font-weight-bold text-warning mb-1"><i data-lucide="lightbulb" class="mr-1" style="width: 12px;"></i> Rekomendasi:</div>
-                                                                                    <p class="small text-muted mb-0 font-italic">Produk inimemiliki potensi besar. Kami menyarankan untuk melakukan peningkatan kualitas pada kriteria yang telah disebutkan di atas agar memiliki daya saing yang lebih tinggi pada periode kurasi selanjutnya.</p>
-                                                                                </div>
+                                                                                @if($res->status_lolos === 'lolos_bersyarat')
+                                                                                    <div class="saran-box p-2 bg-white rounded border border-warning">
+                                                                                        <div class="small font-weight-bold text-warning mb-1"><i data-lucide="lightbulb" class="mr-1" style="width: 12px;"></i> Rekomendasi:</div>
+                                                                                        <p class="small text-muted mb-0 font-italic">Produk ini memiliki potensi besar dan layak dipasarkan secara retail dengan beberapa penyesuaian. Kami menyarankan untuk melakukan peningkatan kualitas/perbaikan pada kriteria di atas agar memenuhi standar retail sepenuhnya.</p>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="saran-box p-2 bg-white rounded border border-danger">
+                                                                                        <div class="small font-weight-bold text-danger mb-1"><i data-lucide="alert-circle" class="mr-1" style="width: 12px;"></i> Rekomendasi:</div>
+                                                                                        <p class="small text-muted mb-0 font-italic">Produk belum memenuhi kriteria kelayakan retail. Kami menyarankan untuk melakukan perbaikan menyeluruh pada kriteria yang belum mencapai target nilai agar siap untuk mengikuti kurasi periode berikutnya.</p>
+                                                                                    </div>
+                                                                                @endif
                                                                             @else
                                                                                 <div class="text-center py-3">
                                                                                     <i data-lucide="award" class="text-success mb-2" style="width: 32px; height: 32px;"></i>
@@ -216,7 +223,16 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="5" class="text-center py-5 text-muted">
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <i data-lucide="bar-chart-3" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
+                                                            <p class="mb-0">Belum ada hasil ranking produk.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div>
@@ -273,18 +289,18 @@
                             </div>
                             <div class="card-body pt-0">
                                 <div class="mb-3">
-                                    <span class="badge badge-success mb-1">Lolos</span>
+                                    <span class="badge badge-success mb-1">Layak Retail</span>
                                     <p class="small text-muted mb-0">Produk direkomendasikan sebagai siap masuk retail.</p>
                                 </div>
                                 <div class="mb-3">
-                                    <span class="badge badge-warning mb-1">Lolos Bersyarat</span>
+                                    <span class="badge badge-warning mb-1">Layak Retail Bersyarat</span>
                                     <ul class="pl-3 mb-0 small text-muted">
                                         <li>UMKM melakukan perbaikan produk pada kriteria tersebut.</li>
                                         <li>Kurator melakukan verifikasi perbaikan secara terbatas.</li>
                                     </ul>
                                 </div>
                                 <div>
-                                    <span class="badge badge-danger mb-1">Tidak Lolos</span>
+                                    <span class="badge badge-danger mb-1">Belum Layak</span>
                                     <ul class="pl-3 mb-0 small text-muted">
                                         <li>UMKM melakukan perbaikan menyeluruh.</li>
                                         <li>Produk mengikuti kurasi ulang penuh.</li>

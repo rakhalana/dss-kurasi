@@ -71,7 +71,7 @@
                                     <div class="card card-stat h-100 shadow-sm border-0">
                                         <div class="card-body d-flex flex-column justify-content-between">
                                             <div class="d-flex justify-content-between align-items-start">
-                                                <div class="stat-label">Produk Lolos</div>
+                                                <div class="stat-label">Produk Layak Retail</div>
                                                 <div class="stat-icon text-muted"><i data-lucide="check-circle"></i></div>
                                             </div>
                                             <div class="stat-value text-success">0</div>
@@ -131,8 +131,8 @@
                             <div class="card h-100 shadow-sm border-0">
                                 <div class="card-header bg-white font-weight-bold">
                                     <i data-lucide="bar-chart-3" class="text-primary mr-2"></i> Tren 5 Periode Terakhir
-                                    Lolos
-                                    Kurasi
+                                    Kelayakan
+                                    Retail
                                 </div>
                                 <div class="card-body d-flex align-items-center justify-content-center">
                                     <div class="text-muted text-center py-5">

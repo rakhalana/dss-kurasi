@@ -329,7 +329,7 @@
                             @if(!$hasilAhp)
                                 <div class="alert alert-info text-center shadow-sm border-0">
                                     <i data-lucide="info" class="mr-2"></i>Belum ada data perhitungan. Silakan isi form
-                                    perbandingan dan klik <strong>Hitung Bobot AHP</strong>.
+                                    perbandingan dan klik <strong>Simpan Bobot AHP</strong>.
                                 </div>
                             @else
                                 <!-- Matriks Perbandingan -->

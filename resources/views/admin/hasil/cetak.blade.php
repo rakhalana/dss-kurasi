@@ -57,8 +57,8 @@
         </table>
     </div>
 
-    {{-- TABEL 1: PRODUK LOLOS --}}
-    <h5 class="font-weight-bold mb-3" style="text-decoration: underline;">I. Daftar Produk Lolos Kurasi</h5>
+    {{-- TABEL 1: PRODUK LAYAK RETAIL --}}
+    <h5 class="font-weight-bold mb-3" style="text-decoration: underline;">I. Daftar Produk Layak Retail</h5>
     <table class="table-report">
         <thead>
             <tr>
@@ -89,15 +89,15 @@
             @endforeach
             @if($noLolos == 1)
                 <tr>
-                    <td colspan="5" class="text-center text-muted font-italic">Tidak ada produk yang dinyatakan lolos murni.
+                    <td colspan="5" class="text-center text-muted font-italic">Tidak ada produk yang dinyatakan layak retail murni.
                     </td>
                 </tr>
             @endif
         </tbody>
     </table>
 
-    {{-- TABEL 2: PRODUK LOLOS BERSYARAT --}}
-    <h5 class="font-weight-bold mb-3" style="text-decoration: underline;">II. Daftar Produk Lolos Kurasi Bersyarat</h5>
+    {{-- TABEL 2: PRODUK LAYAK RETAIL BERSYARAT --}}
+    <h5 class="font-weight-bold mb-3" style="text-decoration: underline;">II. Daftar Produk Layak Retail Bersyarat</h5>
     <table class="table-report">
         <thead>
             <tr>
@@ -122,30 +122,34 @@
                         <td class="text-center font-weight-bold text-warning">{{ number_format($res->total_score, 3) }}</td>
                         <td>
                             <div class="eval-note text-justify">
-                                <div class="font-weight-bold mb-1" style="font-size: 0.85rem;">Aspek yang perlu disesuaikan:
+                                <div class="font-weight-bold text-dark mb-2" style="font-size: 0.9rem;">Aspek yang Perlu Disesuaikan:</div>
+                                <div class="pl-2 mb-2">
+                                    @foreach($res->evaluations as $eval)
+                                        <div class="eval-item text-dark mb-1" style="font-size: 0.85rem; line-height: 1.4;">
+                                            <span class="text-warning mr-1">●</span> <strong>{{ $eval['kriteria'] }}</strong> (Target: {{ $eval['target_desc'] }})
+                                        </div>
+                                    @endforeach
                                 </div>
-                                @foreach($res->evaluations as $eval)
-                                    <div class="eval-item mb-1">- <strong>{{ $eval['kriteria'] }}</strong>: Belum mencapai standar
-                                        <!-- (seharusnya: <em>{{ $eval['target_desc'] }}</em>)</div> -->
-                                @endforeach
-                                    <div class="mt-2 text-muted" style="font-size: 0.8rem;"><em>Rekomendasi: Lakukan penyesuaian
-                                            pada aspek di atas agar siap retail.</em></div>
+                                <div class="print-recommendation-box warn">
+                                    <div class="rec-title text-warning">Rekomendasi Tindak Lanjut:</div>
+                                    <div class="rec-text text-dark">Lakukan penyesuaian pada aspek di atas agar memenuhi standar retail sepenuhnya.</div>
                                 </div>
+                            </div>
                         </td>
                     </tr>
                 @endif
             @endforeach
             @if($noLolosBersyarat == 1)
                 <tr>
-                    <td colspan="5" class="text-center text-muted font-italic">Tidak ada produk yang dinyatakan lolos
+                    <td colspan="5" class="text-center text-muted font-italic">Tidak ada produk yang dinyatakan layak retail
                         bersyarat.</td>
                 </tr>
             @endif
         </tbody>
     </table>
 
-    {{-- TABEL 3: PRODUK TIDAK LOLOS --}}
-    <h5 class="font-weight-bold mb-3" style="text-decoration: underline;">III. Daftar Produk Tidak Lolos & Catatan
+    {{-- TABEL 3: PRODUK BELUM LAYAK --}}
+    <h5 class="font-weight-bold mb-3" style="text-decoration: underline;">III. Daftar Produk Belum Layak & Catatan
         Evaluasi</h5>
     <table class="table-report">
         <thead>
@@ -178,23 +182,31 @@
                         <td>
                             @if(!$res->is_lolos_legalitas)
                                 <div class="eval-note text-justify">
-                                    <div class="font-weight-bold mb-1 text-danger" style="font-size: 0.85rem;">Dokumen Wajib Belum
-                                        Lengkap:</div>
-                                    <div class="eval-item mb-1">- <strong>{{ implode(', ', $res->missing_docs) }}</strong></div>
-                                    <div class="mt-2 text-muted" style="font-size: 0.8rem;"><em>Rekomendasi: Segera lengkapi dokumen
-                                            legalitas untuk mengikuti kurasi periode berikutnya.</em></div>
+                                    <div class="font-weight-bold text-danger mb-2" style="font-size: 0.9rem;">Dokumen Wajib Belum Lengkap:</div>
+                                    <div class="pl-2 mb-2">
+                                        <div class="eval-item text-dark mb-1" style="font-size: 0.85rem; line-height: 1.4;">
+                                            <span class="text-danger mr-1">●</span> <strong>{{ implode(', ', $res->missing_docs) }}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="print-recommendation-box danger">
+                                        <div class="rec-title text-danger">Rekomendasi Tindak Lanjut:</div>
+                                        <div class="rec-text text-dark">Segera lengkapi dokumen legalitas yang kurang untuk mengikuti kurasi periode berikutnya.</div>
+                                    </div>
                                 </div>
                             @else
                                 <div class="eval-note text-justify">
-                                    <div class="font-weight-bold mb-1 text-danger" style="font-size: 0.85rem;">Aspek yang perlu
-                                        ditingkatkan:</div>
-                                    @foreach($res->evaluations as $eval)
-                                        <div class="eval-item mb-1">- <strong>{{ $eval['kriteria'] }}</strong>: Belum mencapai standar
-                                            <!-- (seharusnya: <em>{{ $eval['target_desc'] }}</em>) -->
-                                        </div>
-                                    @endforeach
-                                    <div class="mt-2 text-muted" style="font-size: 0.8rem;"><em>Rekomendasi: Tingkatkan kualitas
-                                            pada aspek di atas agar dapat bersaing di periode kurasi berikutnya.</em></div>
+                                    <div class="font-weight-bold text-danger mb-2" style="font-size: 0.9rem;">Aspek yang Belum Memenuhi Standar:</div>
+                                    <div class="pl-2 mb-2">
+                                        @foreach($res->evaluations as $eval)
+                                            <div class="eval-item text-dark mb-1" style="font-size: 0.85rem; line-height: 1.4;">
+                                                <span class="text-danger mr-1">●</span> <strong>{{ $eval['kriteria'] }}</strong> (Target: {{ $eval['target_desc'] }})
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="print-recommendation-box danger">
+                                        <div class="rec-title text-danger">Rekomendasi Tindak Lanjut:</div>
+                                        <div class="rec-text text-dark">Lakukan perbaikan menyeluruh pada aspek di atas agar siap diajukan kembali pada periode kurasi berikutnya.</div>
+                                    </div>
                                 </div>
                             @endif
                         </td>
@@ -203,7 +215,7 @@
             @endforeach
             @if($noTidakLolos == 1)
                 <tr>
-                    <td colspan="5" class="text-center text-muted font-italic">Seluruh produk memenuhi standar dasar kurasi.
+                    <td colspan="5" class="text-center text-muted font-italic">Seluruh produk memenuhi standar dasar kelayakan.
                     </td>
                 </tr>
             @endif
@@ -214,16 +226,16 @@
         <h6 class="font-weight-bold mb-2">Keterangan Status Penilaian:</h6>
         <div class="row">
             <div class="col-4">
-                <strong>1. Lolos:</strong><br>
+                <strong>1. Layak Retail:</strong><br>
                 Produk direkomendasikan sebagai siap masuk retail.
             </div>
             <div class="col-4 border-left border-right">
-                <strong>2. Lolos Bersyarat:</strong><br>
+                <strong>2. Layak Retail Bersyarat:</strong><br>
                 - UMKM melakukan perbaikan produk pada kriteria tertentu.<br>
                 - Kurator melakukan verifikasi perbaikan secara terbatas.
             </div>
             <div class="col-4">
-                <strong>3. Tidak Lolos:</strong><br>
+                <strong>3. Belum Layak:</strong><br>
                 - UMKM melakukan perbaikan menyeluruh.<br>
                 - Produk mengikuti kurasi ulang penuh.
             </div>

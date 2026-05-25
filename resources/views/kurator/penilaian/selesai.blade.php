@@ -45,7 +45,7 @@
 
                             {{-- Actions --}}
                             <div class="mx-auto-260">
-                                <a href="{{ route('kurator.penilaian.detail', $periode->id_periode_kurasi) }}" class="btn btn-primary btn-block font-weight-bold py-2 mb-2 shadow-sm rounded-pill">
+                                <a href="{{ route('hasil.detail', $periode->id_periode_kurasi) }}" class="btn btn-primary btn-block font-weight-bold py-2 mb-2 shadow-sm rounded-pill">
                                     <i data-lucide="eye" class="mr-2" style="width: 16px; height: 16px;"></i> Lihat Hasil Kurasi
                                 </a>
                                 <a href="{{ route('kurator.penilaian.index') }}" class="btn btn-outline-secondary btn-block font-weight-bold py-2 rounded-pill">

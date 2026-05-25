@@ -131,7 +131,12 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center py-5 text-muted">Belum ada data produk di sistem.</td>
+                                                <td colspan="4" class="text-center py-5 text-muted">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <i data-lucide="package" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
+                                                        <p class="mb-0">Belum ada data produk di sistem.</p>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -148,52 +153,67 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkAll = document.getElementById('checkAll');
-        const checkboxes = document.querySelectorAll('.checkbox-item');
-
-        if(checkAll) {
-            checkAll.addEventListener('change', function() {
-                checkboxes.forEach(cb => {
-                    // Update DOM property
-                    cb.checked = this.checked;
-                    // Trigger change event if DataTables modifies it
-                    $(cb).trigger('change');
-                });
-            });
-            
-            // Check 'checkAll' if all checkboxes are initially checked
-            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-            if(checkboxes.length > 0 && allChecked) {
-                checkAll.checked = true;
-            }
-            
-            checkboxes.forEach(cb => {
-                cb.addEventListener('change', function() {
-                    if(!this.checked) {
-                        checkAll.checked = false;
-                    } else {
-                        const allChecked = Array.from(checkboxes).every(c => c.checked);
-                        if(allChecked) checkAll.checked = true;
-                    }
-                });
-            });
-        }
-    });
-
     $(document).ready(function() {
-        // Initialize DataTables with pagination disabled to ensure all form inputs are submitted
-        $('#tableProdukKurasi').DataTable({
+        // Initialize DataTables with pagination disabled
+        var table = $('#tableProdukKurasi').DataTable({
             "paging": false,
             "info": false,
             "language": {
-                "search": "Cari produk:"
+                "search": "Cari produk:",
+                "emptyTable": "Belum ada data produk di sistem."
             },
             "drawCallback": function() {
                 if (window.lucide) {
                     lucide.createIcons();
                 }
             }
+        });
+
+        // Check All functionality (only for visible/filtered rows)
+        $('#checkAll').on('change', function() {
+            var rows = table.rows({ 'search': 'applied' }).nodes();
+            $('input.checkbox-item', rows).prop('checked', this.checked);
+        });
+
+        // Update checkAll state when individual checkboxes change
+        $('#tableProdukKurasi tbody').on('change', 'input.checkbox-item', function() {
+            if (!this.checked) {
+                $('#checkAll').prop('checked', false);
+            } else {
+                // Check if all visible checkboxes are checked
+                var rows = table.rows({ 'search': 'applied' }).nodes();
+                var allChecked = true;
+                $('input.checkbox-item', rows).each(function() {
+                    if (!this.checked) {
+                        allChecked = false;
+                        return false;
+                    }
+                });
+                $('#checkAll').prop('checked', allChecked);
+            }
+        });
+
+        // Handle form submission
+        $('#tableProdukKurasi').closest('form').on('submit', function(e) {
+            var form = this;
+            
+            // Get all checked checkboxes in the DataTable (including those hidden by search)
+            var checkedCheckboxes = table.$('input.checkbox-item:checked');
+            
+            // Remove any dynamically added hidden inputs to prevent duplicates
+            $(form).find('input[name="alternatif_ids[]"][type="hidden"]').remove();
+            
+            // For each checked checkbox, if it's not in the DOM, append a hidden input
+            checkedCheckboxes.each(function() {
+                if (!$.contains(document, this)) {
+                    $(form).append(
+                        $('<input>')
+                            .attr('type', 'hidden')
+                            .attr('name', 'alternatif_ids[]')
+                            .val(this.value)
+                    );
+                }
+            });
         });
     });
 </script>

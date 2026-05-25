@@ -16,7 +16,10 @@
                         <h4 class="font-weight-bold text-primary mb-1">Periode Kurasi</h4>
                         <p class="text-muted small mb-0">Manajemen jadwal dan status kurasi produk UMKM.</p>
                     </div>
-                    <button class="btn btn-primary shadow-sm rounded-pill font-weight-bold px-4" data-toggle="modal" data-target="#addPeriodeModal">
+                    <button class="btn btn-primary shadow-sm rounded-pill font-weight-bold px-4" 
+                        data-toggle="modal" 
+                        data-target="{{ $activeAHP ? '#addPeriodeModal' : '#warningAHPModal' }}"
+                    >
                         <i data-lucide="plus" class="mr-2" style="width: 18px; height: 18px;"></i>Tambah Periode
                     </button>
                 </div>
@@ -147,6 +150,7 @@
 
 <!-- Modals -->
 @include('modal.kurasi.add')
+@include('modal.kurasi.warning_ahp')
 @foreach($periode as $p)
     @include('modal.kurasi.edit')
     @if($p->status_kurasi == 'belum')

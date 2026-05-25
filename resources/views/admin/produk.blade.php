@@ -65,7 +65,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($produk as $index => $item)
+                                        @forelse($produk as $index => $item)
                                             <tr>
                                                 <td class="pl-4 text-muted small">{{ $index + 1 }}</td>
                                                 <td class="cursor-pointer" data-toggle="modal" data-target="#modalDetailProduk-{{ $item->id_alternatif }}">
@@ -140,7 +140,16 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="7" class="text-center py-5 text-muted">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <i data-lucide="package" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
+                                                        <p class="mb-0">Belum ada data produk di sistem.</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -179,6 +188,7 @@
                 "search": "Cari produk:",
                 "lengthMenu": "Tampilkan _MENU_ data",
                 "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                "emptyTable": "Belum ada data produk di sistem.",
                 "paginate": {
                     "previous": "<i data-lucide='chevron-left'></i>",
                     "next": "<i data-lucide='chevron-right'></i>"

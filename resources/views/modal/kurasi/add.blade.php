@@ -10,6 +10,14 @@
             <form action="{{ route('admin.kurasi.store') }}" method="POST">
                 @csrf
                 <div class="modal-body py-4">
+                    @if(!$activeAHP)
+                        <div class="alert alert-warning border-0 shadow-sm mb-4 d-flex align-items-center">
+                            <i data-lucide="alert-triangle" class="text-warning mr-3" style="width: 24px; height: 24px; flex-shrink: 0;"></i>
+                            <div class="small">
+                                <strong>Perhatian:</strong> Bobot kriteria AHP belum ditentukan/aktif. Silakan tentukan bobot kriteria AHP terlebih dahulu.
+                            </div>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label class="font-weight-bold text-dark small">Nama Periode</label>
                         <input type="text" name="nama_periode" class="form-control rounded-lg bg-light border-0" placeholder="Contoh: Kurasi Tahap I 2026" required>
@@ -39,7 +47,11 @@
                 </div>
                 <div class="modal-footer border-top-0 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-4" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm" {{ !$activeAHP ? 'disabled' : '' }}>Simpan Periode</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm"
+                        @if(!$activeAHP)
+                            onclick="event.preventDefault(); $('#addPeriodeModal').modal('hide'); $('#warningAHPModal').modal('show');"
+                        @endif
+                    >Simpan Periode</button>
                 </div>
             </form>
         </div>

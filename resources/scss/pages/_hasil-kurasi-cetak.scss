@@ -102,6 +102,56 @@
             }
         }
     }
+
+    .text-success {
+        color: #28a745 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .text-warning {
+        color: #d39e00 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .text-danger {
+        color: #dc3545 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .print-recommendation-box {
+        padding: 10px 14px;
+        margin-top: 10px;
+        border-radius: 6px;
+        border-left: 4px solid #6c757d;
+        background-color: #f8f9fa !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        font-size: 0.85rem;
+        line-height: 1.4;
+
+        &.warn {
+            border-color: #d39e00 !important;
+            background-color: #fff9e6 !important;
+        }
+
+        &.danger {
+            border-color: #dc3545 !important;
+            background-color: #fdf2f2 !important;
+        }
+        
+        .rec-title {
+            font-weight: bold;
+            font-size: 0.88rem;
+            margin-bottom: 4px;
+        }
+
+        .rec-text {
+            font-style: italic;
+        }
+    }
 }
 
 // Ensure border-box for everything in report

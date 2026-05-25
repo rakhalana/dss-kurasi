@@ -68,9 +68,9 @@
                                     <div class="card-body text-center py-5 text-muted">
                                         <div class="d-flex flex-column align-items-center">
                                             <i data-lucide="bar-chart-3" class="mb-2"
-                                                style="width: 48px; height: 48px; opacity: 0.3;"></i>
-                                            <h5 class="font-weight-bold">Belum Ada Hasil Kurasi</h5>
-                                            <p class="mb-0">Daftar ini akan terisi setelah periode kurasi diselesaikan oleh
+                                                style="width: 32px; height: 32px; opacity: 0.3;"></i>
+                                            <p class="mb-0">Belum Ada Hasil Kurasi. Daftar ini akan terisi setelah periode
+                                                kurasi diselesaikan oleh
                                                 kurator.</p>
                                         </div>
                                     </div>

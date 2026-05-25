@@ -69,7 +69,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($users as $index => $user)
+                                        @forelse($users as $index => $user)
                                             <tr>
                                                 <td class="pl-4 text-muted small">{{ $index + 1 }}</td>
                                                 <td>
@@ -118,7 +118,16 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center py-5 text-muted">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <i data-lucide="users" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
+                                                        <p class="mb-0">Belum ada data pengguna di sistem.</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -147,6 +156,7 @@
                     "search": "Cari user:",
                     "lengthMenu": "Tampilkan _MENU_ data",
                     "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    "emptyTable": "Belum ada data pengguna di sistem.",
                     "paginate": {
                         "previous": "<i data-lucide='chevron-left'></i>",
                         "next": "<i data-lucide='chevron-right'></i>"

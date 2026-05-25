@@ -65,7 +65,6 @@ class PeriodeKurasiController extends Controller
             'penanggung_jawab' => 'required|string|max:100',
             'id_kurator' => 'nullable|exists:users,id',
             'catatan_umum' => 'nullable|string',
-            'status_kurasi' => 'required|in:belum,berlangsung,selesai',
         ]);
 
         $tanggal = \Carbon\Carbon::parse($request->tanggal_kurasi);
@@ -83,7 +82,6 @@ class PeriodeKurasiController extends Controller
             'tahun' => $tanggal->year,
             'penanggung_jawab' => $request->penanggung_jawab,
             'id_kurator' => $request->id_kurator,
-            'status_kurasi' => $request->status_kurasi,
             'catatan_umum' => $request->catatan_umum,
         ]);
 
