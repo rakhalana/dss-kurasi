@@ -16,9 +16,7 @@ class Alternatif extends Model
     protected $fillable = [
         'nama_produk',
         'nama_brand_umkm',
-        'nama_pemilik',
         'deskripsi_produk',
-        'foto_produk',
         'is_aktif',
         'created_at',
         'updated_at'

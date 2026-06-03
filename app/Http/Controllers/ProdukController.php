@@ -24,29 +24,20 @@ class ProdukController extends Controller
         return view('admin.produk', compact('produk'));
     }
 
-    // Menyimpan data produk alternatif baru ke database beserta foto produk
+    // Menyimpan data produk alternatif baru ke database
     public function store(Request $request)
     {
         $request->validate([
             'nama_produk' => 'required|string|max:150',
             'nama_brand_umkm' => 'required|string|max:150',
-            'nama_pemilik' => 'required|string|max:150',
             'deskripsi_produk' => 'nullable|string',
-            'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         DB::beginTransaction();
         try {
-            $data = $request->except('foto_produk');
+            $data = $request->only(['nama_produk', 'nama_brand_umkm', 'deskripsi_produk']);
             $data['is_aktif'] = false;
             
-            if ($request->hasFile('foto_produk')) {
-                $file = $request->file('foto_produk');
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs('produk', $filename, 'public');
-                $data['foto_produk'] = $path;
-            }
-
             $produk = Alternatif::create($data);
 
             AlternatifLegalitas::create([
@@ -70,38 +61,23 @@ class ProdukController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_pemilik' => 'required|string|max:150',
+            'nama_produk' => 'required|string|max:150',
+            'nama_brand_umkm' => 'required|string|max:150',
             'deskripsi_produk' => 'nullable|string',
-            'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $produk = Alternatif::findOrFail($id);
-        $data = $request->except('foto_produk');
-
-        if ($request->hasFile('foto_produk')) {
-            if ($produk->foto_produk) {
-                Storage::disk('public')->delete($produk->foto_produk);
-            }
-
-            $file = $request->file('foto_produk');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('produk', $filename, 'public');
-            $data['foto_produk'] = $path;
-        }
+        $data = $request->only(['nama_produk', 'nama_brand_umkm', 'deskripsi_produk']);
 
         $produk->update($data);
         return redirect()->back()->with('success', 'Produk berhasil diperbarui.');
     }
 
-    // Menghapus data produk alternatif dari database beserta file fotonya
+    // Menghapus data produk alternatif dari database
     public function destroy($id)
     {
         $produk = Alternatif::findOrFail($id);
         
-        if ($produk->foto_produk) {
-            Storage::disk('public')->delete($produk->foto_produk);
-        }
-
         $produk->delete();
         return redirect()->route('admin.produk')->with('success', 'Produk berhasil dihapus.');
     }
@@ -193,18 +169,15 @@ class ProdukController extends Controller
         $sheet1->setTitle('Detail Produk');
         $sheet1->setCellValue('A1', 'Nama Produk');
         $sheet1->setCellValue('B1', 'Nama Brand UMKM');
-        $sheet1->setCellValue('C1', 'Nama Pemilik');
-        $sheet1->setCellValue('D1', 'Deskripsi Produk');
-        $sheet1->setCellValue('E1', 'Foto Produk');
+        $sheet1->setCellValue('C1', 'Deskripsi Produk');
         
-        $sheet1->getStyle('A1:E1')->getFont()->setBold(true);
-        foreach(range('A','D') as $columnID) {
+        $sheet1->getStyle('A1:C1')->getFont()->setBold(true);
+        foreach(range('A','C') as $columnID) {
             $sheet1->getColumnDimension($columnID)->setAutoSize(true);
         }
-        $sheet1->getColumnDimension('E')->setWidth(20);
 
         // Memformat Sheet 1 sebagai tabel bergaya Medium9 agar terlihat rapi dan premium
-        $table1 = new Table('A1:E101', 'TableDetailProduk');
+        $table1 = new Table('A1:C101', 'TableDetailProduk');
         $tableStyle1 = new TableStyle();
         $tableStyle1->setTheme(TableStyle::TABLE_STYLE_MEDIUM9);
         $tableStyle1->setShowRowStripes(true);
@@ -278,16 +251,6 @@ class ProdukController extends Controller
                 throw new \Exception('Sheet "Detail Produk" tidak ditemukan.');
             }
 
-            // Mengambil semua objek gambar/foto produk dari Sheet 1 (Memetakan cell koordinat ke baris)
-            $drawings = $sheet1->getDrawingCollection();
-            $rowImages = [];
-            foreach ($drawings as $drawing) {
-                $coordinate = $drawing->getCoordinates();
-                if (preg_match('/^E(\d+)$/', $coordinate, $matches)) {
-                    $rowImages[$matches[1]] = $drawing;
-                }
-            }
-
             $rows1 = $sheet1->toArray();
             $header1 = array_shift($rows1);
 
@@ -300,53 +263,15 @@ class ProdukController extends Controller
 
                 $nama_produk = trim($row[0]);
                 $brand = trim($row[1]);
-                $pemilik = $row[2] ?? '';
-                $deskripsi = $row[3] ?? null;
+                $deskripsi = $row[2] ?? null;
 
                 $produk = Alternatif::where('nama_produk', $nama_produk)
                     ->where('nama_brand_umkm', $brand)
                     ->first();
 
                 $updateData = [
-                    'nama_pemilik' => $pemilik,
                     'deskripsi_produk' => $deskripsi,
                 ];
-
-                // Memproses ekstraksi file gambar produk dari cell Excel jika ada
-                if (isset($rowImages[$excelRowIndex])) {
-                    $drawing = $rowImages[$excelRowIndex];
-                    $imageContents = '';
-                    $extension = '';
-
-                    // Ekstraksi gambar tipe MemoryDrawing
-                    if ($drawing instanceof \PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing) {
-                        ob_start();
-                        call_user_func($drawing->getRenderingFunction(), $drawing->getImageResource());
-                        $imageContents = ob_get_contents();
-                        ob_end_clean();
-                        $extension = 'png';
-                    } else {
-                        // Ekstraksi gambar tipe file biasa di dalam struktur zip xlsx
-                        $zipReader = fopen($drawing->getPath(), 'r');
-                        while (!feof($zipReader)) {
-                            $imageContents .= fread($zipReader, 1024);
-                        }
-                        fclose($zipReader);
-                        $extension = $drawing->getExtension();
-                    }
-
-                    if ($imageContents) {
-                        $filename = 'import_' . time() . '_' . uniqid() . '.' . $extension;
-                        $path = 'produk/' . $filename;
-                        
-                        if ($produk && $produk->foto_produk) {
-                            Storage::disk('public')->delete($produk->foto_produk);
-                        }
-                        
-                        Storage::disk('public')->put($path, $imageContents);
-                        $updateData['foto_produk'] = $path;
-                    }
-                }
 
                 if (!$produk) {
                     $updateData['nama_produk'] = $nama_produk;

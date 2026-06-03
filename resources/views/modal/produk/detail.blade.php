@@ -12,22 +12,16 @@
             </div>
             <div class="modal-body p-0">
                 <div class="row no-gutters">
-                    <!-- Left: Image & Quick Stats -->
-                    <div
-                        class="col-md-5 bg-light p-4 d-flex flex-column align-items-center justify-content-center border-right">
-                        <div class="product-detail-img shadow-sm rounded-lg overflow-hidden mb-4 bg-white"
-                            style="width: 220px; height: 220px; border: 5px solid #fff;">
-                            @if($item->foto_produk)
-                                <img src="{{ asset('storage/' . $item->foto_produk) }}"
-                                    class="w-100 h-100 object-fit-cover">
-                            @else
-                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
-                                    <i data-lucide="package" style="width: 80px; height: 80px; opacity: 0.2;"></i>
-                                </div>
-                            @endif
-                        </div>
+                    <!-- Left: Quick Stats -->
+                    <div class="col-md-4 bg-light p-4 d-flex flex-column align-items-center justify-content-center border-right">
                         <div class="w-100">
-                            <div class="d-flex justify-content-between mb-2">
+                            <div class="text-center mb-4">
+                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm border mb-3" style="width: 80px; height: 80px;">
+                                    <i data-lucide="package" class="text-primary" style="width: 40px; height: 40px;"></i>
+                                </div>
+                                <h6 class="font-weight-bold text-muted mb-0" style="font-size: 0.8rem; letter-spacing: 0.5px; text-transform: uppercase;">Status Produk</h6>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
                                 <span class="text-muted small">Data Legalitas:</span>
                                 @if($item->is_aktif)
                                     <span class="badge badge-pill badge-success px-3">Sudah diisi</span>
@@ -47,17 +41,11 @@
                     </div>
 
                     <!-- Right: Info Details -->
-                    <div class="col-md-7 p-4">
+                    <div class="col-md-8 p-4">
                         <div class="mb-4">
                             <h4 class="font-weight-bold text-dark mb-1">{{ $item->nama_produk }}</h4>
                             <p class="text-primary font-weight-600 mb-2">{{ $item->nama_brand_umkm }}</p>
                             <hr class="my-3">
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-sm-5 text-muted small uppercase font-weight-bold tracking-wider">Nama
-                                Pemilik</div>
-                            <div class="col-sm-7 text-dark font-weight-500">{{ $item->nama_pemilik }}</div>
                         </div>
 
                         <div class="row mb-3">

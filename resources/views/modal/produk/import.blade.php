@@ -40,7 +40,6 @@
                             <h6 class="small font-weight-bold mb-2 text-dark">Instruksi:</h6>
                             <ul class="small text-muted mb-0 pl-3">
                                 <li>Pastikan file memiliki 2 sheet: "Detail Produk" & "Legalitas".</li>
-                                <li>Kolom **Foto Produk (E)** bisa diisi gambar langsung di Excel.</li>
                                 <li>Sistem akan mengupdate data jika produk & brand sudah ada.</li>
                             </ul>
                         </div>

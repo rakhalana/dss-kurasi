@@ -78,7 +78,6 @@
                                                 @endif
                                             </th>
                                             <th class="border-0 py-3">Produk & Brand</th>
-                                            <th class="border-0 py-3">Pemilik</th>
                                             <th class="border-0 py-3">Keterangan</th>
                                         </tr>
                                     </thead>
@@ -104,23 +103,11 @@
                                                     @endif
                                                 </td>
                                                 <td class="py-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="product-img-wrapper mr-3 shadow-sm">
-                                                            @if($alt->foto_produk)
-                                                                <img src="{{ asset('storage/' . $alt->foto_produk) }}" alt="{{ $alt->nama_produk }}" class="w-100 h-100 object-fit-cover">
-                                                            @else
-                                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
-                                                                    <i data-lucide="package" style="width: 20px;"></i>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                        <div>
-                                                            <h6 class="mb-0 font-weight-bold text-dark">{{ $alt->nama_produk }}</h6>
-                                                            <small class="text-primary font-weight-500">{{ $alt->nama_brand_umkm }}</small>
-                                                        </div>
+                                                    <div>
+                                                        <h6 class="mb-0 font-weight-bold text-dark">{{ $alt->nama_produk }}</h6>
+                                                        <small class="text-primary font-weight-500">{{ $alt->nama_brand_umkm }}</small>
                                                     </div>
                                                 </td>
-                                                <td class="py-3">{{ $alt->nama_pemilik ?? '-' }}</td>
                                                 <td class="py-3">
                                                     @if(in_array($alt->id_alternatif, $selectedAlternatifIds))
                                                         <span class="badge badge-success px-2 py-1"><i data-lucide="check" style="width: 12px; height: 12px; margin-right: 2px;"></i> Terpilih</span>
@@ -131,7 +118,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center py-5 text-muted">
+                                                <td colspan="3" class="text-center py-5 text-muted">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i data-lucide="package" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
                                                         <p class="mb-0">Belum ada data produk di sistem.</p>

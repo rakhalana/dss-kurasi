@@ -58,7 +58,6 @@
                                         <tr>
                                             <th class="pl-4 py-3" style="width: 50px;">No</th>
                                             <th class="py-3">Produk & Brand</th>
-                                            <th class="py-3">Pemilik</th>
                                             <th class="py-3">Syarat Wajib (Legalitas)</th>
                                             <th class="py-3">Status Penilaian</th>
                                         </tr>
@@ -72,23 +71,11 @@
                                             <tr style="{{ $rowStyle }}">
                                                 <td class="pl-4 text-muted small">{{ $index + 1 }}</td>
                                                 <td class="py-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="product-img-wrapper mr-3 shadow-sm">
-                                                            @if($item->alternatif->foto_produk)
-                                                                <img src="{{ asset('storage/' . $item->alternatif->foto_produk) }}" alt="{{ $item->alternatif->nama_produk }}" class="w-100 h-100" style="object-fit: cover;">
-                                                            @else
-                                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
-                                                                    <i data-lucide="package" style="width: 20px;"></i>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                        <div>
-                                                            <h6 class="mb-0 font-weight-bold text-dark">{{ $item->alternatif->nama_produk }}</h6>
-                                                            <small class="text-primary font-weight-500">{{ $item->alternatif->nama_brand_umkm }}</small>
-                                                        </div>
+                                                    <div>
+                                                        <h6 class="mb-0 font-weight-bold text-dark">{{ $item->alternatif->nama_produk }}</h6>
+                                                        <small class="text-primary font-weight-500">{{ $item->alternatif->nama_brand_umkm }}</small>
                                                     </div>
                                                 </td>
-                                                <td class="py-3 text-muted">{{ $item->alternatif->nama_pemilik ?? '-' }}</td>
                                                 <td class="py-3">
                                                     @if($isEligible)
                                                         <span class="badge badge-success px-2 py-1"><i data-lucide="check" class="mr-1" style="width: 12px; height: 12px;"></i> Lolos</span>
@@ -108,7 +95,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="5" class="text-center py-5 text-muted">
+                                                <td colspan="4" class="text-center py-5 text-muted">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i data-lucide="package" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
                                                         <p class="mb-0">Belum ada data produk di periode ini.</p>

@@ -63,9 +63,8 @@
         <thead>
             <tr>
                 <th style="width: 5%; text-align: center;">No</th>
-                <th style="width: 30%;">Nama Produk & Brand/UMKM</th>
-                <th style="width: 20%;">Nama Pemilik</th>
-                <th style="width: 15%; text-align: center;">Skor Akhir</th>
+                <th style="width: 45%;">Nama Produk & Brand/UMKM</th>
+                <th style="width: 20%; text-align: center;">Skor Akhir</th>
                 <th style="width: 30%;">Keterangan</th>
             </tr>
         </thead>
@@ -80,7 +79,6 @@
                             <small class="text-muted d-block mb-1">{{ $res->alternatif->brand ?? $res->alternatif->nama_brand_umkm }}</small>
                             <span class="badge-monochrome badge-lolos">✓ LAYAK RETAIL</span>
                         </td>
-                        <td>{{ $res->alternatif->nama_pemilik }}</td>
                         <td class="text-center font-weight-bold">{{ number_format($res->total_score, 3) }}</td>
                         <td>
                             <span class="font-weight-bold text-dark" style="font-size: 0.85rem;">Memenuhi Standar Kelayakan Retail</span>
@@ -90,7 +88,7 @@
             @endforeach
             @if($noLolos == 1)
                 <tr>
-                    <td colspan="5" class="text-center text-muted font-italic">Tidak ada produk yang dinyatakan layak retail murni.
+                    <td colspan="4" class="text-center text-muted font-italic">Tidak ada produk yang dinyatakan layak retail murni.
                     </td>
                 </tr>
             @endif
@@ -103,9 +101,8 @@
         <thead>
             <tr>
                 <th style="width: 5%; text-align: center;">No</th>
-                <th style="width: 30%;">Nama Produk & Brand/UMKM</th>
-                <th style="width: 20%;">Nama Pemilik</th>
-                <th style="width: 15%; text-align: center;">Skor Akhir</th>
+                <th style="width: 45%;">Nama Produk & Brand/UMKM</th>
+                <th style="width: 20%; text-align: center;">Skor Akhir</th>
                 <th style="width: 30%;">Catatan Perbaikan</th>
             </tr>
         </thead>
@@ -120,7 +117,6 @@
                             <small class="text-muted d-block mb-1">{{ $res->alternatif->brand ?? $res->alternatif->nama_brand_umkm }}</small>
                             <span class="badge-monochrome badge-bersyarat">LAYAK BERSYARAT</span>
                         </td>
-                        <td>{{ $res->alternatif->nama_pemilik }}</td>
                         <td class="text-center font-weight-bold">{{ number_format($res->total_score, 3) }}</td>
                         <td>
                             <div class="eval-note text-justify">
@@ -143,7 +139,7 @@
             @endforeach
             @if($noLolosBersyarat == 1)
                 <tr>
-                    <td colspan="5" class="text-center text-muted font-italic">Tidak ada produk yang dinyatakan layak retail
+                    <td colspan="4" class="text-center text-muted font-italic">Tidak ada produk yang dinyatakan layak retail
                         bersyarat.</td>
                 </tr>
             @endif
@@ -156,9 +152,8 @@
         <thead>
             <tr>
                 <th style="width: 5%; text-align: center;">No</th>
-                <th style="width: 30%;">Nama Produk & Brand/UMKM</th>
-                <th style="width: 20%;">Nama Pemilik</th>
-                <th style="width: 15%; text-align: center;">Skor Akhir</th>
+                <th style="width: 45%;">Nama Produk & Brand/UMKM</th>
+                <th style="width: 20%; text-align: center;">Skor Akhir</th>
                 <th style="width: 30%;">Catatan Evaluasi</th>
             </tr>
         </thead>
@@ -173,7 +168,6 @@
                             <small class="text-muted d-block mb-1">{{ $res->alternatif->brand ?? $res->alternatif->nama_brand_umkm }}</small>
                             <span class="badge-monochrome badge-tidak-lolos">BELUM LAYAK</span>
                         </td>
-                        <td>{{ $res->alternatif->nama_pemilik }}</td>
                         <td class="text-center font-weight-bold">
                             @if(!$res->is_lolos_legalitas)
                                 <span style="font-size: 0.8rem; font-weight: bold; text-transform: uppercase; display: block; line-height: 1.2;">Gagal<br>Legalitas</span>
@@ -217,7 +211,7 @@
             @endforeach
             @if($noTidakLolos == 1)
                 <tr>
-                    <td colspan="5" class="text-center text-muted font-italic">Seluruh produk memenuhi standar dasar kelayakan.
+                    <td colspan="4" class="text-center text-muted font-italic">Seluruh produk memenuhi standar dasar kelayakan.
                     </td>
                 </tr>
             @endif

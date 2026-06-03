@@ -57,7 +57,6 @@
                                         <tr>
                                             <th class="pl-4 py-3" style="width: 50px;">No</th>
                                             <th class="py-3">Produk & Brand</th>
-                                            <th class="py-3">Pemilik</th>
                                             <th class="py-3 text-center">Dokumen</th>
                                             <th class="py-3 text-center">Data Legalitas</th>
                                             <th class="py-3 text-center">Verifikasi Legalitas</th>
@@ -69,24 +68,10 @@
                                             <tr>
                                                 <td class="pl-4 text-muted small">{{ $index + 1 }}</td>
                                                 <td class="cursor-pointer" data-toggle="modal" data-target="#modalDetailProduk-{{ $item->id_alternatif }}">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="product-img-wrapper mr-3 rounded shadow-sm overflow-hidden" style="width: 48px; height: 48px; background: #f8f9fa;">
-                                                            @if($item->foto_produk)
-                                                                <img src="{{ asset('storage/' . $item->foto_produk) }}" alt="{{ $item->nama_produk }}" class="w-100 h-100 object-fit-cover">
-                                                            @else
-                                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
-                                                                    <i data-lucide="package" style="width: 20px;"></i>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                        <div>
-                                                            <h6 class="mb-0 font-weight-bold text-dark">{{ $item->nama_produk }}</h6>
-                                                            <small class="text-primary font-weight-500">{{ $item->nama_brand_umkm }}</small>
-                                                        </div>
+                                                    <div>
+                                                        <h6 class="mb-0 font-weight-bold text-dark">{{ $item->nama_produk }}</h6>
+                                                        <small class="text-primary font-weight-500">{{ $item->nama_brand_umkm }}</small>
                                                     </div>
-                                                </td>
-                                                <td>
-                                                    <span class="text-sm font-weight-500 text-dark">{{ $item->nama_pemilik }}</span>
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="d-flex justify-content-center flex-wrap gap-1" style="gap: 4px;">
@@ -142,7 +127,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center py-5 text-muted">
+                                                <td colspan="6" class="text-center py-5 text-muted">
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i data-lucide="package" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
                                                         <p class="mb-0">Belum ada data produk di sistem.</p>
