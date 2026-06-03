@@ -37,7 +37,6 @@
                         <div class="card border-0 shadow-sm rounded-lg overflow-hidden">
                             <div class="card-header bg-white py-3 border-bottom-0 d-flex justify-content-between align-items-center">
                                 <h6 class="font-weight-bold text-dark mb-0">Ranking Produk</h6>
-                                <!-- <span class="badge badge-primary-light text-primary px-3 py-1 small rounded-pill">Profile Matching Engine</span> -->
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
