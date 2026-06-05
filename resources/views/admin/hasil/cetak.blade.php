@@ -71,7 +71,7 @@
         <tbody>
             @php $noLolos = 1; @endphp
             @foreach($results as $res)
-                @if($res->status_lolos === 'lolos')
+                @if($res->status_layak === 'layak_retail')
                     <tr>
                         <td class="text-center">{{ $noLolos++ }}</td>
                         <td>
@@ -109,7 +109,7 @@
         <tbody>
             @php $noLolosBersyarat = 1; @endphp
             @foreach($results as $res)
-                @if($res->status_lolos === 'lolos_bersyarat')
+                @if($res->status_layak === 'layak_retail_bersyarat')
                     <tr>
                         <td class="text-center">{{ $noLolosBersyarat++ }}</td>
                         <td>
@@ -160,7 +160,7 @@
         <tbody>
             @php $noTidakLolos = 1; @endphp
             @foreach($results as $res)
-                @if($res->status_lolos === 'tidak_lolos')
+                @if($res->status_layak === 'belum_layak')
                     <tr>
                         <td class="text-center">{{ $noTidakLolos++ }}</td>
                         <td>

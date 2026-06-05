@@ -40,4 +40,39 @@
             max-width: 37.5%;
         }
     }
+
+    // Top 5 Leaderboard Styles
+    .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 14px;
+        color: white;
+
+        &.gold {
+            background: linear-gradient(135deg, #ffd700, #ffb300);
+            box-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+            svg {
+                width: 16px;
+                height: 16px;
+                color: white;
+            }
+        }
+        &.silver {
+            background: linear-gradient(135deg, #e0e0e0, #9e9e9e);
+            box-shadow: 0 2px 4px rgba(158, 158, 158, 0.4);
+        }
+        &.bronze {
+            background: linear-gradient(135deg, #ffbca8, #c66245);
+            box-shadow: 0 2px 4px rgba(198, 98, 69, 0.4);
+        }
+    }
+
+    .bg-rank-1 { background-color: rgba(255, 215, 0, 0.05); }
+    .bg-rank-2 { background-color: rgba(158, 158, 158, 0.05); }
+    .bg-rank-3 { background-color: rgba(198, 98, 69, 0.05); }
 }
