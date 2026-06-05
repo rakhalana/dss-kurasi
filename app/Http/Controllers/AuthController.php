@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\KurasiScoreService;
 
 class AuthController extends Controller
 {
@@ -62,8 +63,39 @@ class AuthController extends Controller
                 ->orderBy('kriteria.urutan_tampil')
                 ->select('kriteria.nama_kriteria', 'ahp_bobot.bobot_prioritas')
                 ->get();
+
+            // === FITUR DASHBOARD BARU ===
+            $scoreService = app(KurasiScoreService::class);
+
+            // 1. Total Produk Layak Retail dari semua periode yang selesai
+            $totalLayakRetail = $scoreService->countTotalLayakRetailAllPeriode();
+
+            // 2. Daftar semua periode selesai untuk dropdown Top 5
+            $periodeSelesaiList = \App\Models\PeriodeKurasi::where('status_kurasi', 'selesai')
+                ->orderBy('tanggal_kurasi', 'desc')
+                ->get();
+
+            // 3. Top 5 produk dari periode yang dipilih atau terakhir selesai
+            $selectedPeriodeId = request('periode');
+            if ($selectedPeriodeId) {
+                $latestPeriode = $periodeSelesaiList->firstWhere('id_periode_kurasi', $selectedPeriodeId);
+            } else {
+                $latestPeriode = $periodeSelesaiList->first();
+            }
+
+            $top5Produk = [];
+            if ($latestPeriode) {
+                $latestPeriode->load(['periodeAlternatif.alternatif.legalitas', 'ahpSesi.bobot.kriteria']);
+                $top5Produk = $scoreService->getTopProducts($latestPeriode, 5);
+            }
+
+            // 4. Data tren 5 periode terakhir (jumlah produk layak retail per periode)
+            $trendData = $scoreService->getTrendData(5);
  
-            return view('admin.dashboard', compact('totalKriteria', 'totalPeriodeKurasi', 'totalProduk', 'kriteriaBobots'));
+            return view('admin.dashboard', compact(
+                'totalKriteria', 'totalPeriodeKurasi', 'totalProduk', 'kriteriaBobots',
+                'totalLayakRetail', 'periodeSelesaiList', 'top5Produk', 'latestPeriode', 'trendData'
+            ));
         } elseif ($user->role === 'kurator') {
             $userId = Auth::id();
             
@@ -135,6 +167,8 @@ class AuthController extends Controller
         return redirect('/')->withErrors(['email' => 'Role pengguna tidak valid.']);
     }
 
+
+
     // Melakukan logout pengguna dari sistem
     public function logout(Request $request)
     {
@@ -144,3 +178,4 @@ class AuthController extends Controller
         return redirect('/');
     }
 }
+

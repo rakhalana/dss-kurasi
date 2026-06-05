@@ -50,7 +50,7 @@
                         </select>
                         <small class="text-muted mt-1 d-block">
                             <i data-lucide="info"></i>
-                            Target nilai adalah nilai "ideal" yang diharapkan untuk produk lolos kurasi.
+                            Target nilai adalah nilai "ideal" yang diharapkan untuk produk layak retail.
                         </small>
                     </div>
                 </div>

@@ -86,11 +86,11 @@
                                                         <span class="h6 font-weight-bold text-primary mb-0">{{ number_format($res->total_score, 3) }}</span>
                                                     </td>
                                                     <td class="py-3 text-center">
-                                                        @if($res->status_lolos === 'lolos')
+                                                        @if($res->status_layak === 'layak_retail')
                                                             <span class="badge badge-pill badge-success px-3 py-2">
                                                                 <i data-lucide="check-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Layak Retail
                                                             </span>
-                                                        @elseif($res->status_lolos === 'lolos_bersyarat')
+                                                        @elseif($res->status_layak === 'layak_retail_bersyarat')
                                                             <span class="badge badge-pill badge-warning px-3 py-2">
                                                                 <i data-lucide="alert-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Layak Retail Bersyarat
                                                             </span>
@@ -155,7 +155,7 @@
                                                                                         @endforeach
                                                                                     </div>
                                                                                 </div>
-                                                                                @if($res->status_lolos === 'lolos_bersyarat')
+                                                                                @if($res->status_layak === 'layak_retail_bersyarat')
                                                                                     <div class="saran-box p-2 bg-white rounded border border-warning">
                                                                                         <div class="small font-weight-bold text-warning mb-1"><i data-lucide="lightbulb" class="mr-1" style="width: 12px;"></i> Rekomendasi:</div>
                                                                                         <p class="small text-muted mb-0 font-italic">Produk ini memiliki potensi besar dan layak dipasarkan secara retail dengan beberapa penyesuaian. Kami menyarankan untuk melakukan peningkatan kualitas/perbaikan pada kriteria di atas agar memenuhi standar retail sepenuhnya.</p>
