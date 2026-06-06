@@ -158,6 +158,7 @@
         var table = $('#tableProdukKurasi').DataTable({
             "paging": false,
             "info": false,
+            "ordering": false,
             "language": {
                 "search": "Cari produk:",
                 "emptyTable": "Belum ada data produk di sistem."
@@ -169,41 +170,11 @@
             }
         });
 
-        // Check All functionality (only for visible/filtered rows)
-        $('#checkAll').on('change', function() {
-            var rows = table.rows({ 'search': 'applied' }).nodes();
-            $('input.checkbox-item', rows).prop('checked', this.checked);
-        });
-
-        // Update checkAll state when individual checkboxes change
-        $('#tableProdukKurasi tbody').on('change', 'input.checkbox-item', function() {
-            if (!this.checked) {
-                $('#checkAll').prop('checked', false);
-            } else {
-                // Check if all visible checkboxes are checked
-                var rows = table.rows({ 'search': 'applied' }).nodes();
-                var allChecked = true;
-                $('input.checkbox-item', rows).each(function() {
-                    if (!this.checked) {
-                        allChecked = false;
-                        return false;
-                    }
-                });
-                $('#checkAll').prop('checked', allChecked);
-            }
-        });
-
-        // Handle form submission
+        // Handle form submission to include hidden-by-search checkboxes
         $('#tableProdukKurasi').closest('form').on('submit', function(e) {
             var form = this;
-            
-            // Get all checked checkboxes in the DataTable (including those hidden by search)
-            var checkedCheckboxes = table.$('input.checkbox-item:checked');
-            
-            // Remove any dynamically added hidden inputs to prevent duplicates
+            var checkedCheckboxes = table.$('.checkbox-item:checked');
             $(form).find('input[name="alternatif_ids[]"][type="hidden"]').remove();
-            
-            // For each checked checkbox, if it's not in the DOM, append a hidden input
             checkedCheckboxes.each(function() {
                 if (!$.contains(document, this)) {
                     $(form).append(
@@ -216,5 +187,43 @@
             });
         });
     });
+
+    // ===== Check All - Pure Vanilla JS (no jQuery, no DataTables) =====
+    document.addEventListener('DOMContentLoaded', function() {
+        var checkAll = document.getElementById('checkAll');
+        if (!checkAll) {
+            console.log('[CheckAll] Element #checkAll not found — readonly mode?');
+            return;
+        }
+
+        console.log('[CheckAll] Handler registered');
+
+        checkAll.addEventListener('change', function(e) {
+            e.stopPropagation();
+            var isChecked = checkAll.checked;
+            var items = document.querySelectorAll('#tableProdukKurasi .checkbox-item');
+            console.log('[CheckAll] Clicked, checked=' + isChecked + ', found ' + items.length + ' items');
+            
+            items.forEach(function(item) {
+                item.checked = isChecked;
+            });
+        });
+
+        // Update checkAll when individual items change
+        var tableBody = document.querySelector('#tableProdukKurasi tbody');
+        if (tableBody) {
+            tableBody.addEventListener('change', function(e) {
+                if (e.target.classList.contains('checkbox-item')) {
+                    var items = document.querySelectorAll('#tableProdukKurasi .checkbox-item');
+                    var allChecked = true;
+                    items.forEach(function(item) {
+                        if (!item.checked) allChecked = false;
+                    });
+                    checkAll.checked = allChecked;
+                }
+            });
+        }
+    });
 </script>
 @endpush
+
