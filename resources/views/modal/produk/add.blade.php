@@ -1,4 +1,5 @@
-<div class="modal fade" id="modalAddProduk" tabindex="-1" role="dialog" aria-labelledby="modalAddProdukLabel" aria-hidden="true">
+<div class="modal fade" id="modalAddProduk" tabindex="-1" role="dialog" aria-labelledby="modalAddProdukLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content border-0 shadow-lg overflow-hidden">
             <div class="modal-header modal-header--gradient pt-4 px-4">
@@ -50,6 +51,12 @@
         $(document).ready(function() {
             $('#modalAddProduk').modal('show');
         });
-    @endif
-</script>
+
+        // Auto-open modal if there are errors (optional, but requested in many cases)
+        @if($errors->any() && old('nama_produk'))
+            $(document).ready(function () {
+                $('#modalAddProduk').modal('show');
+            });
+        @endif
+    </script>
 @endpush
