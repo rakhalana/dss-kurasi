@@ -157,9 +157,6 @@ class AuthController extends Controller
                 ->where('status_kurasi', 'selesai')
                 ->count();
 
-            // $totalProductsCount = \App\Models\PeriodeAlternatif::whereHas('periodeKurasi', function ($q) use ($userId) {
-            //     $q->where('id_kurator', $userId);
-            // })->count();
             $totalProductsCount = \App\Models\PenilaianKurasi::where('dinilai_oleh', $userId)
                 ->distinct('id_periode_alternatif')
                 ->count();

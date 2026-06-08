@@ -51,12 +51,6 @@
         $(document).ready(function() {
             $('#modalAddProduk').modal('show');
         });
-
-        // Auto-open modal if there are errors (optional, but requested in many cases)
-        @if($errors->any() && old('nama_produk'))
-            $(document).ready(function () {
-                $('#modalAddProduk').modal('show');
-            });
-        @endif
+    @endif
     </script>
 @endpush
