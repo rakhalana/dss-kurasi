@@ -10,9 +10,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class PeriodeKurasiController
+ * Menangani manajemen periode kurasi dan pemilihan produk alternatif untuk dikurasi.
+ */
 class PeriodeKurasiController extends Controller
 {
-    // Menampilkan daftar periode kurasi di dashboard admin
+    /**
+     * Menampilkan daftar periode kurasi di dashboard admin.
+     */
     public function index()
     {
         $periode = PeriodeKurasi::with(['kurator', 'ahpSesi'])->withCount('periodeAlternatif')->latest()->get();
@@ -22,7 +28,9 @@ class PeriodeKurasiController extends Controller
         return view('admin.kurasi.index', compact('periode', 'kurators', 'activeAHP'));
     }
 
-    // Menyimpan data periode kurasi baru ke database
+    /**
+     * Menyimpan data periode kurasi baru ke database.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -56,7 +64,9 @@ class PeriodeKurasiController extends Controller
         return redirect()->route('admin.kurasi.index')->with('success', 'Periode Kurasi berhasil ditambahkan.');
     }
 
-    // Memperbarui data periode kurasi tertentu berdasarkan ID
+    /**
+     * Memperbarui data periode kurasi tertentu berdasarkan ID.
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -88,7 +98,9 @@ class PeriodeKurasiController extends Controller
         return redirect()->route('admin.kurasi.index')->with('success', 'Periode Kurasi berhasil diperbarui.');
     }
 
-    // Menghapus data periode kurasi berdasarkan ID
+    /**
+     * Menghapus data periode kurasi berdasarkan ID.
+     */
     public function destroy($id)
     {
         $periode = PeriodeKurasi::findOrFail($id);
@@ -103,7 +115,9 @@ class PeriodeKurasiController extends Controller
         return redirect()->route('admin.kurasi.index')->with('success', 'Periode Kurasi berhasil dihapus.');
     }
 
-    // Mengelola produk alternatif yang diikutsertakan dalam periode kurasi tertentu
+    /**
+     * Mengelola produk alternatif yang diikutsertakan dalam periode kurasi tertentu.
+     */
     public function manageProduk($id)
     {
         $periode = PeriodeKurasi::findOrFail($id);
@@ -115,7 +129,9 @@ class PeriodeKurasiController extends Controller
         return view('admin.kurasi.produk', compact('periode', 'alternatifs', 'selectedAlternatifIds'));
     }
 
-    // Menyimpan produk alternatif terpilih untuk masuk ke periode kurasi (menggunakan transaksi database)
+    /**
+     * Menyimpan produk alternatif terpilih untuk masuk ke periode kurasi (menggunakan transaksi database).
+     */
     public function storeProduk(Request $request, $id)
     {
         $periode = PeriodeKurasi::findOrFail($id);

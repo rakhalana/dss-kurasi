@@ -9,15 +9,23 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
 
+/**
+ * Class PasswordResetController
+ * Menangani proses permintaan reset dan pengaturan ulang kata sandi pengguna.
+ */
 class PasswordResetController extends Controller
 {
-    // Menampilkan formulir untuk meminta tautan reset kata sandi
+    /**
+     * Menampilkan formulir untuk meminta tautan reset kata sandi.
+     */
     public function showLinkRequestForm()
     {
         return view('auth.forgot-password');
     }
 
-    // Mengirimkan tautan reset kata sandi ke email pengguna
+    /**
+     * Mengirimkan tautan reset kata sandi ke email pengguna.
+     */
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -31,7 +39,9 @@ class PasswordResetController extends Controller
             : back()->withErrors(['email' => __($status)]);
     }
 
-    // Menampilkan halaman formulir reset kata sandi berdasarkan token yang valid
+    /**
+     * Menampilkan halaman formulir reset kata sandi berdasarkan token yang valid.
+     */
     public function showResetForm(Request $request, $token = null)
     {
         return view('auth.reset-password')->with(
@@ -39,7 +49,9 @@ class PasswordResetController extends Controller
         );
     }
 
-    // Melakukan proses reset kata sandi pengguna
+    /**
+     * Melakukan proses reset kata sandi pengguna.
+     */
     public function reset(Request $request)
     {
         $request->validate([

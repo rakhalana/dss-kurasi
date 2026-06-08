@@ -6,16 +6,24 @@ use App\Models\Kriteria;
 use App\Models\KriteriaSkala;
 use Illuminate\Http\Request;
 
+/**
+ * Class KriteriaController
+ * Menangani manajemen data kriteria dan skala penilaian kriteria.
+ */
 class KriteriaController extends Controller
 {
-    // Menampilkan halaman daftar kriteria beserta skala penilaiannya
+    /**
+     * Menampilkan halaman daftar kriteria beserta skala penilaiannya.
+     */
     public function index()
     {
         $kriteria = Kriteria::with('scales')->orderBy('urutan_tampil')->get();
         return view('admin.kriteria', compact('kriteria'));
     }
 
-    // Memperbarui data kriteria tertentu berdasarkan ID
+    /**
+     * Memperbarui data kriteria tertentu berdasarkan ID.
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -31,7 +39,9 @@ class KriteriaController extends Controller
         return redirect()->back()->with('success', 'Kriteria berhasil diperbarui.');
     }
 
-    // Mengubah status aktif/nonaktif skala penilaian kriteria secara asinkron (AJAX)
+    /**
+     * Mengubah status aktif/nonaktif skala penilaian kriteria secara asinkron (AJAX).
+     */
     public function toggleSkala(Request $request)
     {
         $id_kriteria = $request->id_kriteria;
@@ -51,7 +61,9 @@ class KriteriaController extends Controller
         ]);
     }
 
-    // Memperbarui deskripsi dan status aktif skala penilaian kriteria
+    /**
+     * Memperbarui deskripsi dan status aktif skala penilaian kriteria.
+     */
     public function updateSkala(Request $request)
     {
         $request->validate([

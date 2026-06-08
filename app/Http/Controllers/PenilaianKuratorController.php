@@ -10,9 +10,15 @@ use App\Models\PeriodeKurasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class PenilaianKuratorController
+ * Menangani antarmuka dan proses penilaian produk oleh kurator.
+ */
 class PenilaianKuratorController extends Controller
 {
-    // Menampilkan daftar periode kurasi yang ditugaskan ke kurator yang sedang login
+    /**
+     * Menampilkan daftar periode kurasi yang ditugaskan ke kurator yang sedang login.
+     */
     public function index()
     {
         $userId = Auth::id();
@@ -48,7 +54,9 @@ class PenilaianKuratorController extends Controller
         return view('kurator.penilaian.index', compact('periodes'));
     }
 
-    // Menampilkan daftar produk alternatif dalam satu periode kurasi tertentu
+    /**
+     * Menampilkan daftar produk alternatif dalam satu periode kurasi tertentu.
+     */
     public function detailPeriode($id_periode)
     {
         $userId = Auth::id();
@@ -75,7 +83,9 @@ class PenilaianKuratorController extends Controller
         return view('kurator.penilaian.detail', compact('periode', 'produkList'));
     }
 
-    // Menampilkan lembar ruang kerja (Workspace / Wizard) untuk proses input penilaian
+    /**
+     * Menampilkan lembar ruang kerja (Workspace / Wizard) untuk proses input penilaian.
+     */
     public function workspace($id_periode, $id_alternatif = null)
     {
         $userId = Auth::id();
@@ -156,7 +166,9 @@ class PenilaianKuratorController extends Controller
         ));
     }
 
-    // Menyimpan atau memperbarui nilai untuk satu kriteria tertentu (secara asinkron / AJAX)
+    /**
+     * Menyimpan atau memperbarui nilai untuk satu kriteria tertentu (secara asinkron / AJAX).
+     */
     public function storePenilaian(Request $request, $id_periode, $id_alternatif, $id_kriteria)
     {
         $request->validate([
@@ -193,7 +205,9 @@ class PenilaianKuratorController extends Controller
         ]);
     }
 
-    // Mengubah status periode kurasi menjadi selesai
+    /**
+     * Mengubah status periode kurasi menjadi selesai.
+     */
     public function selesaikanKurasi($id_periode)
     {
         $userId = Auth::id();
@@ -210,7 +224,9 @@ class PenilaianKuratorController extends Controller
         return redirect()->route('kurator.penilaian.selesai', $id_periode);
     }
 
-    // Menampilkan halaman sukses / rangkuman ketika kurasi telah selesai disubmit
+    /**
+     * Menampilkan halaman sukses / rangkuman ketika kurasi telah selesai disubmit.
+     */
     public function halamanSelesai($id_periode)
     {
         $userId = Auth::id();

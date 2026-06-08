@@ -9,16 +9,27 @@ use App\Services\KurasiScoreService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class HasilKurasiController
+ * Menangani tampilan dan cetak hasil kurasi (leaderboard) yang sudah selesai.
+ */
 class HasilKurasiController extends Controller
 {
+    /*
+     */
     protected $scoreService;
 
+    /**
+     * Constructor dengan injeksi KurasiScoreService.
+     */
     public function __construct(KurasiScoreService $scoreService)
     {
         $this->scoreService = $scoreService;
     }
 
-    // Menampilkan daftar periode kurasi yang sudah selesai
+    /**
+     * Menampilkan daftar periode kurasi yang sudah selesai.
+     */
     public function index()
     {
         $user = Auth::user();
@@ -37,7 +48,9 @@ class HasilKurasiController extends Controller
         return view('admin.hasil.index', compact('periodes'));
     }
 
-    // Menampilkan detail hasil kurasi (Leaderboard/peringkat) untuk periode tertentu
+    /**
+     * Menampilkan detail hasil kurasi (Leaderboard/peringkat) untuk periode tertentu.
+     */
     public function detail($id)
     {
         $data = $this->prepareDetailData($id);
@@ -49,7 +62,9 @@ class HasilKurasiController extends Controller
         return view('admin.hasil.detail', $data);
     }
 
-    // Mencetak laporan hasil kurasi untuk periode tertentu
+    /**
+     * Mencetak laporan hasil kurasi untuk periode tertentu.
+     */
     public function cetak($id)
     {
         $data = $this->prepareDetailData($id);
@@ -61,7 +76,9 @@ class HasilKurasiController extends Controller
         return view('admin.hasil.cetak', $data);
     }
 
-    // Mempersiapkan data hasil kurasi menggunakan KurasiScoreService
+    /**
+     * Mempersiapkan data hasil kurasi menggunakan KurasiScoreService.
+     */
     private function prepareDetailData($id)
     {
         $user = Auth::user();

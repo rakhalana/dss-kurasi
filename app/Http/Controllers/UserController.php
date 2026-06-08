@@ -8,9 +8,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class UserController
+ * Menangani manajemen data pengguna sistem (Admin & Kurator).
+ */
 class UserController extends Controller
 {
-    // Menampilkan halaman daftar semua pengguna sistem beserta status aktivitas terakhirnya
+    /**
+     * Menampilkan halaman daftar semua pengguna sistem beserta status aktivitas terakhirnya.
+     */
     public function index()
     {
         // Mengambil semua user dan melakukan left join dengan tabel sessions untuk mendapatkan waktu aktivitas terakhir
@@ -22,7 +28,9 @@ class UserController extends Controller
         return view('admin.user.index', compact('users'));
     }
 
-    // Menyimpan data pengguna baru ke database
+    /**
+     * Menyimpan data pengguna baru ke database.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -42,7 +50,9 @@ class UserController extends Controller
         return back()->with('success', 'User berhasil ditambahkan.');
     }
 
-    // Memperbarui data pengguna berdasarkan ID
+    /**
+     * Memperbarui data pengguna berdasarkan ID.
+     */
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -67,7 +77,9 @@ class UserController extends Controller
         return back()->with('success', 'User berhasil diperbarui.');
     }
 
-    // Menghapus data pengguna dari database berdasarkan ID
+    /**
+     * Menghapus data pengguna dari database berdasarkan ID.
+     */
     public function destroy($id)
     {
         $user = User::findOrFail($id);

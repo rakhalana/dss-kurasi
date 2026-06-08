@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\KurasiScoreService;
 
+/**
+ * Class AuthController
+ * Menangani proses autentikasi (login/logout) dan pengarahan halaman dashboard.
+ */
 class AuthController extends Controller
 {
-    // Mengautentikasi pengguna yang mencoba login
+    /**
+     * Mengautentikasi pengguna yang mencoba login.
+     */
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -37,7 +43,9 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    // Mengarahkan pengguna ke halaman dashboard sesuai dengan role masing-masing
+    /**
+     * Mengarahkan pengguna ke halaman dashboard sesuai dengan role masing-masing.
+     */
     public function dashboard()
     {
         $user = Auth::user();
@@ -157,9 +165,7 @@ class AuthController extends Controller
                 ->where('status_kurasi', 'selesai')
                 ->count();
 
-            // $totalProductsCount = \App\Models\PeriodeAlternatif::whereHas('periodeKurasi', function ($q) use ($userId) {
-            //     $q->where('id_kurator', $userId);
-            // })->count();
+
             $totalProductsCount = \App\Models\PenilaianKurasi::where('dinilai_oleh', $userId)
                 ->distinct('id_periode_alternatif')
                 ->count();
@@ -180,7 +186,9 @@ class AuthController extends Controller
 
 
 
-    // Melakukan logout pengguna dari sistem
+    /**
+     * Melakukan logout pengguna dari sistem.
+     */
     public function logout(Request $request)
     {
         Auth::logout();
