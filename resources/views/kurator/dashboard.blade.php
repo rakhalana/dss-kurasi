@@ -21,20 +21,28 @@
                                 <div class="row align-items-center">
                                     <div class="col-md-8">
                                         <h5 class="card-title mb-2">
-                                            <i data-lucide="activity" class="mr-2" style="width: 20px;"></i> Tugas Aktif: {{ $recentActiveTask->nama_periode }}
+                                            <i data-lucide="activity" class="mr-2" style="width: 20px;"></i> Tugas Aktif:
+                                            {{ $recentActiveTask->nama_periode }}
                                         </h5>
                                         <p class="card-text mb-3">
-                                            Progres Penilaian: <strong>{{ $progress['assessed'] }} dari {{ $progress['total'] }} Produk</strong> ({{ $progress['percentage'] }}%)
+                                            Progres Penilaian: <strong>{{ $progress['assessed'] }} dari {{ $progress['total'] }}
+                                                Produk</strong> ({{ $progress['percentage'] }}%)
                                         </p>
                                         <div class="progress mb-4" style="height: 8px; background: rgba(255,255,255,0.2);">
-                                            <div class="progress-bar bg-white" role="progressbar" style="width: {{ $progress['percentage'] }}%" aria-valuenow="{{ $progress['percentage'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div class="progress-bar bg-white" role="progressbar"
+                                                style="width: {{ $progress['percentage'] }}%"
+                                                aria-valuenow="{{ $progress['percentage'] }}" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
                                         </div>
-                                        <a href="{{ route('kurator.penilaian.detail', $recentActiveTask->id_periode_kurasi) }}" class="btn btn-light text-primary font-weight-bold px-4 shadow-sm">
-                                            Lanjutkan Penilaian <i data-lucide="arrow-right" class="ml-1" style="width: 16px;"></i>
+                                        <a href="{{ route('kurator.penilaian.detail', $recentActiveTask->id_periode_kurasi) }}"
+                                            class="btn btn-light text-primary font-weight-bold px-4 shadow-sm">
+                                            Lanjutkan Penilaian <i data-lucide="arrow-right" class="ml-1"
+                                                style="width: 16px;"></i>
                                         </a>
                                     </div>
                                     <div class="col-md-4 d-none d-md-block text-right">
-                                        <i data-lucide="clipboard-check" class="text-white opacity-25" style="width: 100px; height: 100px;"></i>
+                                        <i data-lucide="clipboard-check" class="text-white opacity-25"
+                                            style="width: 100px; height: 100px;"></i>
                                     </div>
                                 </div>
                             </div>
@@ -42,9 +50,11 @@
                     @else
                         <div class="card card-welcome mb-4 shadow-sm border-0">
                             <div class="card-body p-4 text-center">
-                                <h5 class="card-title justify-content-center mb-2">Semua Tugas Selesai! ✨</h5>
-                                <p class="card-text mb-3">Tidak ada periode kurasi aktif yang ditugaskan kepada Anda saat ini.</p>
-                                <a href="{{ route('kurator.penilaian.index') }}" class="btn btn-light text-primary font-weight-bold px-4 shadow-sm">Lihat Riwayat</a>
+                                <h5 class="card-title justify-content-center mb-2">Semua Tugas Selesai! </h5>
+                                <p class="card-text mb-3">Tidak ada periode kurasi aktif yang ditugaskan kepada Anda saat ini.
+                                </p>
+                                <a href="{{ route('kurator.penilaian.index') }}"
+                                    class="btn btn-light text-primary font-weight-bold px-4 shadow-sm">Lihat Riwayat</a>
                             </div>
                         </div>
                     @endif
@@ -90,10 +100,13 @@
                     {{-- Info Cards --}}
                     <div class="row mt-2">
                         <div class="col-12">
-                            <div class="card border-0 bg-light p-3" style="border-radius: 15px; border-left: 5px solid #0d6efd !important;">
+                            <div class="card border-0 bg-light p-3"
+                                style="border-radius: 15px; border-left: 5px solid #0d6efd !important;">
                                 <div class="d-flex align-items-center">
                                     <i data-lucide="info" class="text-primary mr-3"></i>
-                                    <span class="text-muted small">Sistem menggunakan metode <strong>AHP (Analytic Hierarchy Process)</strong> dan <strong>Profile Matching</strong> untuk perankingan otomatis berdasarkan input nilai Anda.</span>
+                                    <span class="text-muted small">Sistem menggunakan metode <strong>AHP (Analytic Hierarchy
+                                            Process)</strong> dan <strong>Profile Matching</strong> untuk pemeringkataan
+                                        otomatis berdasarkan input nilai Anda.</span>
                                 </div>
                             </div>
                         </div>

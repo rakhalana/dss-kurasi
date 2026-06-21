@@ -36,7 +36,7 @@
                     <div class="col-lg-9 mb-4 order-1">
                         <div class="card border-0 shadow-sm rounded-lg overflow-hidden">
                             <div class="card-header bg-white py-3 border-bottom-0 d-flex justify-content-between align-items-center">
-                                <h6 class="font-weight-bold text-dark mb-0">Ranking Produk</h6>
+                                <h6 class="font-weight-bold text-dark mb-0">Peringkat Produk</h6>
                                 <!-- <span class="badge badge-primary-light text-primary px-3 py-1 small rounded-pill">Profile Matching Engine</span> -->
                             </div>
                             <div class="card-body p-0">
@@ -242,7 +242,7 @@
                                                     <td colspan="5" class="text-center py-5 text-muted">
                                                         <div class="d-flex flex-column align-items-center">
                                                             <i data-lucide="bar-chart-3" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
-                                                            <p class="mb-0">Belum ada hasil ranking produk.</p>
+                                                            <p class="mb-0">Belum ada hasil pemeringkatan produk.</p>
                                                         </div>
                                                     </td>
                                                 </tr>

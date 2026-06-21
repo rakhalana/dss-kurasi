@@ -148,7 +148,7 @@ class KurasiScoreService
             ];
         }
 
-        // Mengurutkan produk berdasarkan skor akhir tertinggi (perankingan)
+        // Mengurutkan produk berdasarkan skor akhir tertinggi (pemeringkatan)
         usort($results, function ($a, $b) {
             if ($a->total_score == $b->total_score)
                 return 0;

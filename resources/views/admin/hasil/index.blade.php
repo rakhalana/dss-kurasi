@@ -56,7 +56,7 @@
                                     <div class="card-footer bg-white border-top-0 p-4 pt-0">
                                         <a href="{{ route('hasil.detail', $periode->id_periode_kurasi) }}"
                                             class="btn btn-primary btn-block btn-rounded d-flex align-items-center justify-content-center font-weight-bold">
-                                            <span>Lihat Hasil & Ranking</span>
+                                            <span>Lihat Hasil & Peringkat</span>
                                             <i data-lucide="bar-chart-3" class="ml-2" style="width: 16px; height: 16px;"></i>
                                         </a>
                                     </div>
