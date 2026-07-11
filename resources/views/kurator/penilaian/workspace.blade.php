@@ -197,6 +197,7 @@
 
 @push('modal')
     @include('modal.penilaian.selesaikan')
+    @include('modal.penilaian.konfirmasi_simpan')
 @endpush
 
 @push('scripts')
@@ -261,12 +262,24 @@
             }
         });
 
-        // Simpan & Lanjut Click (Last Step)
+        // Simpan & Lanjut Click (Last Step) - Show confirmation modal
         $('#btnSimpan').on('click', function() {
+            $('#modalKonfirmasiSimpan').modal('show');
+        });
+
+        // Confirm save in modal
+        $('#btnKonfirmasiSimpan').on('click', function() {
             if (isSaving) return;
             
             const $btn = $(this);
+            const $btnSimpan = $('#btnSimpan');
+            
+            // Disable buttons and show spinner
             $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span> Menyimpan...');
+            $btnSimpan.prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span> Menyimpan...');
+            
+            // Disable modal close buttons to prevent user actions during save
+            $('#modalKonfirmasiSimpan [data-dismiss="modal"]').prop('disabled', true);
             
             saveCurrentStep().then(() => {
                 try {
@@ -290,7 +303,15 @@
                 }
             }).catch((err) => {
                 console.error('[Workspace] Save failed:', err);
-                $btn.prop('disabled', false).html('<i data-lucide="save" class="mr-1"></i> Simpan & Lanjut');
+                
+                // Re-enable and reset buttons
+                $btn.prop('disabled', false).html('<i data-lucide="check" class="mr-1" style="width: 16px; height: 16px;"></i> Ya, Simpan');
+                $btnSimpan.prop('disabled', false).html('<i data-lucide="save" class="mr-1"></i> Simpan & Lanjut');
+                $('#modalKonfirmasiSimpan [data-dismiss="modal"]').prop('disabled', false);
+                
+                // Hide modal on error so user can correct or retry
+                $('#modalKonfirmasiSimpan').modal('hide');
+                
                 if (typeof lucide !== 'undefined') { lucide.createIcons(); }
                 alert('Gagal menyimpan. Silakan coba lagi.');
             });
