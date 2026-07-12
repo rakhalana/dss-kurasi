@@ -19,39 +19,95 @@ class ProdukController extends Controller
         return view('admin.produk', compact('produk'));
     }
 
-    // Menyimpan data produk alternatif baru ke database beserta foto produk
+    // Menyimpan data produk alternatif baru ke database beserta foto produk dan data legalitasnya
     public function store(Request $request)
     {
+        // Auto-merge switches status
+        $request->merge([
+            'is_nib' => $request->no_nib ? 1 : ($request->is_nib ?? 0),
+            'is_bpom' => $request->no_bpom ? 1 : ($request->is_bpom ?? 0),
+            'is_sp_pirt' => ($request->no_sp_pirt_1 || $request->no_sp_pirt_2) ? 1 : ($request->is_sp_pirt ?? 0),
+            'is_sertifikat_halal' => $request->no_sertifikat_halal ? 1 : ($request->is_sertifikat_halal ?? 0),
+        ]);
+
         $request->validate([
             'nama_produk' => 'required|string|max:150',
             'nama_brand_umkm' => 'required|string|max:150',
             'nama_pemilik' => 'required|string|max:150',
             'deskripsi_produk' => 'nullable|string',
             'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            
+            // Legalitas validation
+            'is_nib' => 'required|boolean',
+            'no_nib' => 'required_if:is_nib,1|nullable|numeric|digits:13',
+            'is_bpom' => 'required|boolean',
+            'no_bpom' => 'required_if:is_bpom,1|nullable|string|max:100',
+            'is_sp_pirt' => 'required|boolean',
+            'no_sp_pirt_1' => 'required_if:is_sp_pirt,1|nullable|numeric|digits:13',
+            'no_sp_pirt_2' => 'required_if:is_sp_pirt,1|nullable|numeric|digits:2',
+            'is_sertifikat_halal' => 'required|boolean',
+            'no_sertifikat_halal' => 'required_if:is_sertifikat_halal,1|nullable|numeric|digits:17',
+            'keterangan' => 'nullable|string',
+        ], [
+            'required_if' => 'Nomor dokumen wajib diisi jika status tersedia.',
+            'digits' => 'Nomor :attribute harus berjumlah :digits angka.',
+            'numeric' => 'Nomor :attribute harus berupa angka.',
         ]);
 
         DB::beginTransaction();
         try {
-            $data = $request->except('foto_produk');
-            $data['is_aktif'] = false;
+            $productData = $request->only(['nama_produk', 'nama_brand_umkm', 'nama_pemilik', 'deskripsi_produk']);
+            $productData['is_aktif'] = false;
             
             if ($request->hasFile('foto_produk')) {
                 $file = $request->file('foto_produk');
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $path = $file->storeAs('produk', $filename, 'public');
-                $data['foto_produk'] = $path;
+                $productData['foto_produk'] = $path;
             }
 
-            $produk = Alternatif::create($data);
+            $produk = Alternatif::create($productData);
 
-            AlternatifLegalitas::create([
+            $legalitasData = [
                 'id_alternatif' => $produk->id_alternatif,
-                'is_nib' => false,
-                'is_bpom' => false,
-                'is_sp_pirt' => false,
-                'is_sertifikat_halal' => false,
-                'lolos_filter' => false,
-            ]);
+                'is_nib' => $request->is_nib,
+                'is_bpom' => $request->is_bpom,
+                'is_sp_pirt' => $request->is_sp_pirt,
+                'is_sertifikat_halal' => $request->is_sertifikat_halal,
+                'keterangan' => $request->keterangan,
+            ];
+
+            // Format penulisan nomor Sertifikat Halal dengan menambahkan prefiks 'ID' jika diisi
+            if ($request->is_sertifikat_halal && $request->no_sertifikat_halal) {
+                $legalitasData['no_sertifikat_halal'] = 'ID' . $request->no_sertifikat_halal;
+            }
+
+            // Format penggabungan nomor SP-PIRT dari dua bagian input menjadi format XXXXXXXXXXXXX-XX
+            if ($request->is_sp_pirt && $request->no_sp_pirt_1 && $request->no_sp_pirt_2) {
+                $legalitasData['no_sp_pirt'] = $request->no_sp_pirt_1 . '-' . $request->no_sp_pirt_2;
+            }
+
+            if ($request->is_bpom && $request->no_bpom) {
+                $legalitasData['no_bpom'] = $request->no_bpom;
+            }
+
+            if ($request->is_nib && $request->no_nib) {
+                $legalitasData['no_nib'] = $request->no_nib;
+            }
+
+            // Menghitung status kelolosan legalitas: Wajib memiliki NIB, Sertifikat Halal, dan salah satu dari BPOM / SP-PIRT
+            $lolos = $request->is_nib && 
+                     $request->is_sertifikat_halal && 
+                     ($request->is_bpom || $request->is_sp_pirt);
+
+            $legalitasData['lolos_filter'] = $lolos;
+
+            AlternatifLegalitas::create($legalitasData);
+
+            if ($lolos) {
+                $produk->update(['is_aktif' => true]);
+                $this->syncLegalitasToPeriodesBeelum($produk->id_alternatif, true);
+            }
 
             DB::commit();
             return redirect()->back()->with('success', 'Produk berhasil ditambahkan.');
