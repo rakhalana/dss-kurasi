@@ -73,4 +73,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/hasil-kurasi', [\App\Http\Controllers\HasilKurasiController::class, 'index'])->name('hasil.index');
     Route::get('/hasil-kurasi/{id}', [\App\Http\Controllers\HasilKurasiController::class, 'detail'])->name('hasil.detail');
     Route::get('/hasil-kurasi/{id}/cetak', [\App\Http\Controllers\HasilKurasiController::class, 'cetak'])->name('hasil.cetak');
+    Route::post('/hasil-kurasi/{id_periode}/validate/{id_alternatif}', [\App\Http\Controllers\HasilKurasiController::class, 'validateOverride'])->name('hasil.validate_override');
+    Route::post('/hasil-kurasi/{id_periode}/validate/{id_alternatif}/cancel', [\App\Http\Controllers\HasilKurasiController::class, 'cancelOverride'])->name('hasil.cancel_override');
 });

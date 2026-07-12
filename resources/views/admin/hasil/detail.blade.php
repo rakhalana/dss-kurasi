@@ -18,6 +18,37 @@
             @include('layouts.navbar')
 
             <div class="px-4 py-3 dashboard-content" data-aos="fade-up">
+                @php
+                    $pendingValidationCount = collect($results)
+                        ->where('status_rekomendasi', 'layak_retail_bersyarat')
+                        ->where('is_validated', false)
+                        ->count();
+                @endphp
+
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
+                        <i data-lucide="check-circle" class="mr-2" style="vertical-align: middle;"></i> <span style="vertical-align: middle;">{{ session('success') }}</span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
+                        <i data-lucide="alert-circle" class="mr-2" style="vertical-align: middle;"></i> <span style="vertical-align: middle;">{{ session('error') }}</span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
+                @if($pendingValidationCount > 0)
+                    <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+                        <i data-lucide="alert-triangle" class="mr-2" style="vertical-align: middle; width: 18px; height: 18px;"></i> 
+                        <span style="vertical-align: middle;"><strong>Perhatian:</strong> Terdapat <strong>{{ $pendingValidationCount }} produk</strong> dengan status rekomendasi Layak Retail Bersyarat yang belum divalidasi oleh kurator. Laporan penilaian tidak dapat dicetak sebelum semua produk tersebut divalidasi.</span>
+                    </div>
+                @endif
+
                 {{-- Header Section --}}
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
@@ -25,9 +56,15 @@
                         <p class="text-muted small mb-0">Hasil akhir perhitungan Profile Matching dan integrasi Bobot AHP.</p>
                     </div>
                     <div class="d-flex">
-                        <a href="{{ route('hasil.cetak', $periode->id_periode_kurasi) }}" target="_blank" class="btn btn-outline-primary btn-rounded mr-2 px-3">
-                            <i data-lucide="printer" class="mr-1" style="width: 16px;"></i> Cetak Laporan Penilaian
-                        </a>
+                        @if($pendingValidationCount > 0)
+                            <button class="btn btn-outline-primary btn-rounded mr-2 px-3" disabled title="Laporan tidak dapat dicetak karena masih ada produk yang membutuhkan keputusan validasi" style="cursor: not-allowed; opacity: 0.65;">
+                                <i data-lucide="printer" class="mr-1" style="width: 16px;"></i> Cetak Laporan Penilaian
+                            </button>
+                        @else
+                            <a href="{{ route('hasil.cetak', $periode->id_periode_kurasi) }}" target="_blank" class="btn btn-outline-primary btn-rounded mr-2 px-3">
+                                <i data-lucide="printer" class="mr-1" style="width: 16px;"></i> Cetak Laporan Penilaian
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -85,31 +122,56 @@
                                                     <td class="py-3 text-center">
                                                         <span class="h6 font-weight-bold text-primary mb-0">{{ number_format($res->total_score, 3) }}</span>
                                                     </td>
-                                                    <td class="py-3 text-center">
-                                                        @if($res->status_layak === 'layak_retail')
-                                                            <span class="badge badge-pill badge-success px-3 py-2">
-                                                                <i data-lucide="check-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Layak Retail
-                                                            </span>
-                                                        @elseif($res->status_layak === 'layak_retail_bersyarat')
-                                                            <span class="badge badge-pill badge-warning px-3 py-2">
-                                                                <i data-lucide="alert-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Layak Retail Bersyarat
-                                                            </span>
-                                                        @else
-                                                            <span class="badge badge-pill badge-danger px-3 py-2">
-                                                                <i data-lucide="x-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Belum Layak
-                                                            </span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="py-3 pr-4 text-right">
-                                                        <button class="btn btn-sm btn-white border rounded-pill px-3 shadow-sm" data-toggle="collapse" data-target="#detail-{{ $res->alternatif->id_alternatif }}">
-                                                            Detail <i data-lucide="chevron-down" class="ml-1" style="width: 14px;"></i>
-                                                        </button>
-                                                    </td>
+                                                      <td class="py-3 text-center">
+                                                         @if($res->status_layak === 'layak_retail')
+                                                             <span class="badge badge-pill badge-success px-3 py-2">
+                                                                 <i data-lucide="check-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Layak Retail
+                                                             </span>
+                                                             @if($res->is_validated)
+                                                                 <div class="text-muted mt-1" style="font-size: 0.7rem; font-weight: 500;">
+                                                                     <i data-lucide="check-square" class="mr-0.5" style="width: 11px; height: 11px; vertical-align: middle;"></i> Divalidasi Kurator
+                                                                 </div>
+                                                             @endif
+                                                         @elseif($res->status_layak === 'layak_retail_bersyarat')
+                                                             <span class="badge badge-pill badge-warning px-3 py-2">
+                                                                 <i data-lucide="alert-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Layak Retail Bersyarat
+                                                             </span>
+                                                             @if($res->is_validated)
+                                                                 <div class="text-muted mt-1" style="font-size: 0.7rem; font-weight: 500;">
+                                                                     <i data-lucide="check-square" class="mr-0.5" style="width: 11px; height: 11px; vertical-align: middle;"></i> Divalidasi Kurator
+                                                                 </div>
+                                                             @endif
+                                                         @else
+                                                             <span class="badge badge-pill badge-danger px-3 py-2">
+                                                                 <i data-lucide="x-circle" class="mr-1" style="width: 12px; height: 12px;"></i> Belum Layak
+                                                             </span>
+                                                         @endif
+                                                     </td>
+                                                     <td class="py-3 pr-4 text-right">
+                                                         <div class="d-inline-flex align-items-center" style="gap: 6px;">
+                                                             @if($res->status_rekomendasi === 'layak_retail_bersyarat' && !$res->is_validated)
+                                                                 <button class="btn btn-sm btn-white border text-success rounded-pill px-3 shadow-sm" style="font-size: 0.75rem;" data-toggle="modal" data-target="#modalValidasi-{{ $res->alternatif->id_alternatif }}">
+                                                                     <i data-lucide="check-square" class="mr-1" style="width: 12px; height: 12px; vertical-align: middle;"></i> Validasi
+                                                                 </button>
+                                                             @elseif($res->is_validated)
+                                                                 <form action="{{ route('hasil.cancel_override', ['id_periode' => $periode->id_periode_kurasi, 'id_alternatif' => $res->alternatif->id_alternatif]) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan keputusan validasi produk ini?')">
+                                                                     @csrf
+                                                                     <button type="submit" class="btn btn-sm btn-white border text-danger rounded-pill px-3 shadow-sm" style="font-size: 0.75rem;">
+                                                                         <i data-lucide="rotate-ccw" class="mr-1" style="width: 12px; height: 12px; vertical-align: middle;"></i> Reset
+                                                                     </button>
+                                                                 </form>
+                                                             @endif
+                                                             <button class="btn btn-sm btn-white border rounded-pill px-3 shadow-sm" style="font-size: 0.75rem;" data-toggle="collapse" data-target="#detail-{{ $res->alternatif->id_alternatif }}">
+                                                                 Detail <i data-lucide="chevron-down" class="ml-1" style="width: 12px; height: 12px; vertical-align: middle;"></i>
+                                                             </button>
+                                                         </div>
+                                                     </td>
                                                 </tr>
                                                 {{-- Detail Breakdown Section --}}
-                                                <tr class="collapse" id="detail-{{ $res->alternatif->id_alternatif }}">
+                                                <tr class="detail-row" id="row-detail-{{ $res->alternatif->id_alternatif }}" style="display: none;">
                                                     <td colspan="5" class="p-0 border-0">
-                                                        <div class="bg-light px-4 py-4 border-bottom">
+                                                        <div class="collapse" id="detail-{{ $res->alternatif->id_alternatif }}">
+                                                            <div class="bg-light px-4 py-4 border-bottom">
                                                             <div class="row">
                                                                 {{-- CASE 1: GAGAL LEGALITAS (Prioritas Utama) --}}
                                                                 @if(!$res->is_lolos_legalitas)
@@ -156,11 +218,25 @@
                                                                                 </div>
                                                                                 
                                                                                 @if(!empty($res->pa->catatan_kurator))
-                                                                                    <div class="mb-3 p-2 bg-white rounded border border-info shadow-sm">
-                                                                                        <div class="small font-weight-bold text-info mb-1"><i data-lucide="message-square" class="mr-1" style="width: 12px;"></i> Catatan Kurator:</div>
-                                                                                        <p class="small text-muted mb-0 font-italic">{{ $res->pa->catatan_kurator }}</p>
-                                                                                    </div>
-                                                                                @endif
+                                                                                     <div class="mb-3 p-2 bg-white rounded border border-info shadow-sm">
+                                                                                         <div class="small font-weight-bold text-info mb-1"><i data-lucide="message-square" class="mr-1" style="width: 12px;"></i> Catatan Kurator:</div>
+                                                                                         <p class="small text-muted mb-0 font-italic">{{ $res->pa->catatan_kurator }}</p>
+                                                                                     </div>
+                                                                                 @endif
+
+                                                                                 @if($res->is_validated)
+                                                                                     <div class="mb-3 p-3 bg-white rounded border shadow-sm">
+                                                                                         <div class="small font-weight-bold text-dark mb-1">
+                                                                                             <i data-lucide="check-square" class="mr-1" style="width: 14px; height: 14px; vertical-align: middle;"></i> Keputusan Validasi Kurator:
+                                                                                             @if($res->status_override === 'layak_retail')
+                                                                                                 <span class="badge badge-success px-2 py-1 ml-1" style="font-size: 0.75rem;">Layak Retail</span>
+                                                                                             @else
+                                                                                                 <span class="badge badge-warning px-2 py-1 ml-1 text-white" style="font-size: 0.75rem;">Layak Retail Bersyarat (Tetap)</span>
+                                                                                             @endif
+                                                                                         </div>
+                                                                                         <p class="small text-muted mb-0 mt-2"><strong>Catatan Komentar:</strong> <em>{{ $res->komentar_override ?? 'Tidak ada catatan komentar validasi.' }}</em></p>
+                                                                                     </div>
+                                                                                 @endif
 
                                                                                 @if($res->status_layak === 'layak_retail_bersyarat')
                                                                                     <div class="saran-box p-2 bg-white rounded border border-warning">
@@ -235,8 +311,9 @@
                                                                 @endif
                                                             </div>
                                                         </div>
-                                                    </td>
-                                                </tr>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             @empty
                                                 <tr>
                                                     <td colspan="5" class="text-center py-5 text-muted">
@@ -328,6 +405,13 @@
         </main>
     </div>
 </div>
+
+{{-- Modals Stack --}}
+@foreach($results as $res)
+    @if($res->status_rekomendasi === 'layak_retail_bersyarat' && !$res->is_validated)
+        @include('modal.hasil.validasi', ['res' => $res, 'periode' => $periode])
+    @endif
+@endforeach
 @endsection
 
 @push('scripts')
@@ -335,6 +419,14 @@
     $(document).ready(function() {
         AOS.init({ duration: 800, once: true });
         
+        // Sync collapse row display with inner collapse div
+        $('.collapse').on('show.bs.collapse', function () {
+            $(this).closest('tr.detail-row').show();
+        });
+        $('.collapse').on('hidden.bs.collapse', function () {
+            $(this).closest('tr.detail-row').hide();
+        });
+
         // Handle icon change on collapse
         $('[data-toggle="collapse"]').on('click', function() {
             $(this).find('i').toggleClass('rotate-180');

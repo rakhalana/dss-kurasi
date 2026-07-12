@@ -135,11 +135,26 @@ class KurasiScoreService
                 $statusLayak = 'belum_layak';
             }
 
+            $statusRekomendasi = $statusLayak;
+            $isValidated = $pa->status_override !== null;
+            $isOverridden = false;
+            $komentarOverride = $pa->komentar_override;
+
+            if ($statusRekomendasi === 'layak_retail_bersyarat' && $pa->status_override === 'layak_retail') {
+                $statusLayak = 'layak_retail';
+                $isOverridden = true;
+            }
+
             $results[] = (object) [
                 'pa' => $pa,
                 'alternatif' => $pa->alternatif,
                 'total_score' => $totalScore,
                 'status_layak' => $statusLayak,
+                'status_rekomendasi' => $statusRekomendasi,
+                'is_validated' => $isValidated,
+                'is_overridden' => $isOverridden,
+                'status_override' => $pa->status_override,
+                'komentar_override' => $komentarOverride,
                 'min_gap' => $minGap,
                 'evaluations' => $evaluations,
                 'missing_docs' => $missingDocs,

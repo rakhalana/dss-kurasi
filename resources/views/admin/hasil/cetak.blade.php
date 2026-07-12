@@ -85,6 +85,9 @@
                         <td>
                             <span class="font-weight-bold text-dark" style="font-size: 0.85rem;">Memenuhi Standar Kelayakan
                                 Retail</span>
+                            @if(isset($res->is_overridden) && $res->is_overridden)
+                                <br><small class="text-primary font-weight-500">* Divalidasi oleh Kurator: {{ $res->komentar_override }}</small>
+                            @endif
                         </td>
                     </tr>
                 @endif

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PeriodeKurasi;
 use App\Models\Kriteria;
 use App\Models\AhpBobot;
+use App\Models\PeriodeAlternatif;
 use App\Services\KurasiScoreService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -104,5 +105,71 @@ class HasilKurasiController extends Controller
         $results = $this->scoreService->calculateResults($periode);
 
         return compact('periode', 'kriterias', 'results', 'bobots');
+    }
+
+    /**
+     * Melakukan validasi manual atas produk "Layak Retail Bersyarat" menjadi "Layak Retail"
+     */
+    public function validateOverride(Request $request, $id_periode, $id_alternatif)
+    {
+        $user = Auth::user();
+        $periode = PeriodeKurasi::findOrFail($id_periode);
+
+        // Keamanan: Hanya kurator periode ini atau admin yang bisa memvalidasi
+        if ($user->role === 'kurator' && $periode->id_kurator !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses untuk memvalidasi hasil ini.');
+        }
+
+        $request->validate([
+            'status_override' => 'required|in:layak_retail,layak_retail_bersyarat',
+            'komentar_override' => 'required_if:status_override,layak_retail|nullable|string|max:1000',
+        ], [
+            'status_override.required' => 'Keputusan validasi wajib dipilih.',
+            'status_override.in' => 'Keputusan validasi tidak sah.',
+            'komentar_override.required_if' => 'Catatan komentar validasi wajib diisi untuk status Layak Retail.',
+        ]);
+
+        $pa = PeriodeAlternatif::where('id_periode_kurasi', $id_periode)
+            ->where('id_alternatif', $id_alternatif)
+            ->firstOrFail();
+
+        // Hitung hasil saat ini untuk memastikan statusnya layak_retail_bersyarat
+        $results = $this->scoreService->calculateResults($periode);
+        $productRes = collect($results)->firstWhere('alternatif.id_alternatif', $id_alternatif);
+
+        if (!$productRes || $productRes->status_rekomendasi !== 'layak_retail_bersyarat') {
+            return redirect()->back()->with('error', 'Hanya produk dengan rekomendasi Layak Retail Bersyarat yang dapat divalidasi.');
+        }
+
+        $pa->update([
+            'status_override' => $request->status_override,
+            'komentar_override' => $request->status_override === 'layak_retail' ? $request->komentar_override : null,
+        ]);
+
+        return redirect()->back()->with('success', 'Status produk berhasil divalidasi.');
+    }
+
+    /**
+     * Membatalkan validasi manual
+     */
+    public function cancelOverride($id_periode, $id_alternatif)
+    {
+        $user = Auth::user();
+        $periode = PeriodeKurasi::findOrFail($id_periode);
+
+        if ($user->role === 'kurator' && $periode->id_kurator !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses untuk membatalkan validasi ini.');
+        }
+
+        $pa = PeriodeAlternatif::where('id_periode_kurasi', $id_periode)
+            ->where('id_alternatif', $id_alternatif)
+            ->firstOrFail();
+
+        $pa->update([
+            'status_override' => null,
+            'komentar_override' => null,
+        ]);
+
+        return redirect()->back()->with('success', 'Validasi berhasil dibatalkan. Status kembali ke rekomendasi SPK.');
     }
 }

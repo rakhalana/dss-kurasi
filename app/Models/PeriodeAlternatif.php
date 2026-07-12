@@ -17,6 +17,8 @@ class PeriodeAlternatif extends Model
         'status_lolos_legalitas',
         'urutan_input',
         'catatan_kurator',
+        'status_override',
+        'komentar_override',
     ];
 
     protected $casts = [
